@@ -1,0 +1,1204 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Здати в номер</title>
+<meta name="description" content="Інтерактивна історія про громадські організації, у якій ви журналіст.">
+<style>
+:root{
+  --bg:#f6f3ee; --paper:#ffffff; --ink:#1d1b18; --muted:#5e5850; --line:#ddd6cb;
+  --accent:#b3261e; --accent-ink:#ffffff; --note:#fff7d6; --note-line:#e7d68f;
+  --good:#2e7d32; --bad:#b3261e; --chip:#efe9df; --me:#1d1b18; --me-ink:#f6f3ee;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#16140f; --paper:#221f19; --ink:#f1ece4; --muted:#b4ab9e; --line:#3a352c;
+    --accent:#e2574c; --accent-ink:#16140f; --note:#2d2817; --note-line:#5b4f22;
+    --good:#7cc47f; --bad:#ef7a70; --chip:#2b2720; --me:#f1ece4; --me-ink:#16140f;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:18px/1.6 Georgia,"Times New Roman",serif;-webkit-text-size-adjust:100%}
+.wrap{max-width:680px;margin:0 auto;padding:12px 16px 96px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0 10px;border-bottom:2px solid var(--ink);margin-bottom:16px;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.brand{font-weight:800;letter-spacing:.04em;text-transform:uppercase;font-size:15px;white-space:nowrap}
+.brand span{color:var(--accent)}
+.meta{font-size:13px;color:var(--muted);text-align:right}
+h1{font-size:32px;line-height:1.15;margin:8px 0 12px}
+h2{font-size:24px;line-height:1.25;margin:4px 0 12px}
+h3{font:800 17px/1.3 system-ui,sans-serif;margin:22px 0 8px}
+.kicker{font:700 13px/1.4 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-top:8px}
+p{margin:0 0 14px}
+a{color:var(--accent)}
+.src{font:14px/1.5 system-ui,sans-serif;color:var(--muted)}
+.scene{animation:enter .45s ease both}
+@keyframes enter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.loc{position:relative;border-radius:14px;overflow:hidden;margin:0 0 14px;border:1px solid var(--line);animation:locin .7s ease both}
+@keyframes locin{from{opacity:0;transform:scale(1.04)}to{opacity:1;transform:none}}
+.loc svg{display:block;width:100%;height:auto}
+.loc .cap{position:absolute;left:10px;bottom:10px;background:rgba(20,18,14,.78);color:#fff;font:600 13px/1.3 system-ui,sans-serif;padding:6px 10px;border-radius:8px;max-width:90%}
+.loc .cap small{display:block;font-weight:400;opacity:.8}
+.chat{display:flex;flex-direction:column;gap:10px;margin:8px 0 6px}
+.msg{display:flex;gap:10px;align-items:flex-end;animation:pop .28s ease both}
+@keyframes pop{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
+.msg .av{flex:0 0 44px;width:44px;height:44px}
+.msg .av svg{width:44px;height:44px;display:block}
+.bubble{background:var(--paper);border:1px solid var(--line);border-radius:16px 16px 16px 4px;padding:9px 13px;max-width:82%;font-size:17px;line-height:1.5}
+.bubble .who{display:block;font:700 13px/1.35 system-ui,sans-serif;margin-bottom:2px}
+.bubble .who em{font-style:normal;font-weight:500;color:var(--muted)}
+.msg.me{justify-content:flex-end}
+.msg.me .bubble{background:var(--me);color:var(--me-ink);border-color:var(--me);border-radius:16px 16px 4px 16px;font-family:system-ui,sans-serif;font-size:16px}
+.sys{align-self:center;font:13px/1.4 system-ui,sans-serif;color:var(--muted);background:var(--chip);border-radius:999px;padding:4px 12px;text-align:center;max-width:92%;animation:pop .28s ease both}
+.typing .bubble{padding:12px 14px}
+.dots{display:inline-flex;gap:4px}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:blink 1s infinite}
+.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.tag{display:inline-block;font:600 11px/1.6 system-ui,sans-serif;background:var(--chip);color:var(--muted);border-radius:999px;padding:0 8px;margin-left:4px;vertical-align:middle}
+.tag.real{background:var(--accent);color:var(--accent-ink)}
+.skip{all:unset;cursor:pointer;display:block;margin:6px auto 0;font:600 13px/1 system-ui,sans-serif;color:var(--muted);padding:8px 12px;border:1px dashed var(--line);border-radius:999px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:10px 0}
+.card .speaker{font:700 15px/1.4 system-ui,sans-serif;margin-bottom:6px}
+.doc{font-family:"Courier New",monospace;font-size:14px;line-height:1.5;background:var(--paper);border:1px dashed var(--muted);padding:14px 16px;border-radius:8px;white-space:pre-wrap;overflow-x:auto;animation:pop .28s ease both}
+.quote{border-left:4px solid var(--accent);padding:4px 0 4px 14px;margin:12px 0;font-style:italic}
+.choices{display:flex;flex-direction:column;gap:10px;margin-top:18px;animation:enter .35s ease both}
+button.choice{all:unset;box-sizing:border-box;display:block;width:100%;cursor:pointer;background:var(--paper);border:2px solid var(--ink);border-radius:12px;padding:13px 16px;font:600 16px/1.4 system-ui,-apple-system,sans-serif;color:var(--ink);transition:transform .12s ease, background .12s ease}
+button.choice:hover{background:var(--chip)}
+button.choice:active{transform:scale(.985)}
+button.choice:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button.choice.primary{background:var(--ink);color:var(--bg)}
+button.choice .cost{float:right;font-weight:500;color:var(--muted);margin-left:10px}
+button.choice.primary .cost{color:var(--bg)}
+button.choice[disabled]{opacity:.4;cursor:not-allowed}
+button.choice.mark{border-width:1px;font-family:"Courier New",monospace;font-weight:500;font-size:15px}
+button.choice.mark[aria-pressed="true"]{background:var(--note);border:2px solid var(--accent)}
+.timebar{display:flex;gap:6px;margin:4px 0 10px;align-items:center;font:13px system-ui,sans-serif;color:var(--muted)}
+.timebar i{display:block;width:22px;height:8px;border-radius:4px;background:var(--ink)}
+.timebar i.used{background:var(--line)}
+.feedback{border-radius:12px;padding:12px 14px;margin:12px 0;font:15px/1.55 system-ui,sans-serif;animation:pop .28s ease both}
+.feedback.ok{border:2px solid var(--good)}
+.feedback.no{border:2px solid var(--bad)}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);font-family:system-ui,sans-serif;z-index:5}
+.bottom .in{max-width:680px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;justify-content:space-between;align-items:center}
+.btn-s{all:unset;cursor:pointer;font:600 15px/1 system-ui,sans-serif;padding:10px 14px;border:1px solid var(--ink);border-radius:8px}
+.btn-s:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn-s .badge{display:inline-block;min-width:20px;text-align:center;background:var(--accent);color:var(--accent-ink);border-radius:999px;font-size:12px;padding:2px 6px;margin-left:6px}
+.btn-s.flash{animation:flash .9s ease}
+@keyframes flash{0%{transform:scale(1)}30%{transform:scale(1.12)}100%{transform:scale(1)}}
+.drawer{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:10}
+.drawer.open{display:block}
+.drawer .panel{position:absolute;right:0;top:0;bottom:0;width:min(420px,100%);background:var(--note);border-left:1px solid var(--note-line);padding:20px 18px;overflow:auto;animation:slide .3s ease both}
+@keyframes slide{from{transform:translateX(30px);opacity:0}to{transform:none;opacity:1}}
+.drawer h3{margin:0 0 12px}
+.drawer ul{padding-left:20px;margin:0}
+.drawer li{margin-bottom:10px;font-size:16px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px}
+.stat b{display:block;font:800 24px/1.2 system-ui,sans-serif}
+.stat span{font:14px/1.3 system-ui,sans-serif;color:var(--muted)}
+.disclaimer{font:14px/1.55 system-ui,sans-serif;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;margin-top:20px}
+.cast{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.cast svg{width:46px;height:46px}
+.post{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:6px 0 12px}
+.post .ch{font:700 13px system-ui,sans-serif;color:var(--muted);margin-bottom:6px}
+.post .hd{font:800 19px/1.3 system-ui,sans-serif}
+.post .re{font:13px system-ui,sans-serif;color:var(--muted);margin-top:8px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:420px){h1{font-size:27px}body{font-size:17px}.bubble{font-size:16px}}
+.msg.cont{margin-top:-6px}
+.msg.cont .av{visibility:hidden}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Здати <span>в номер</span></div>
+    <div class="meta" id="meta"></div>
+  </header>
+  <main id="app" tabindex="-1"></main>
+</div>
+<div class="bottom"><div class="in">
+  <button class="btn-s" id="notesBtn" type="button">Блокнот<span class="badge" id="nb">0</span></button>
+  <button class="btn-s" id="restartBtn" type="button">Почати спочатку</button>
+</div></div>
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Блокнот журналіста">
+  <div class="panel">
+    <h3>Блокнот</h3>
+    <div id="notesList"></div>
+    <p style="margin-top:18px"><button class="btn-s" id="closeNotes" type="button">Закрити</button></p>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   ТЕКСТ ГРИ. Усе, що бачить гравець, зібрано в цій частині файлу.
+   Правити можна будь-який текст між лапками `...`.
+   Не видаляйте коми, дужки та назви полів.
+   ===================================================================== */
+
+/* Факти про ГО «Сила мрій» для архіву редакції (розділ 1).
+   Впишіть свої дані й змініть show: false на show: true. */
+const SYLA_MRIY = {
+  show: false,
+  title: `ГО «Сила мрій»`,
+  where: `[місто, область]`,
+  text: `[Рік створення. Яку проблему побачили засновники. 1–2 конкретні результати з цифрами.]`,
+  quote: `[Коротка цитата голови ГО]`,
+  who: `Денис Вакулко, голова ГО «Сила мрій»`
+};
+
+/* Персонажі: ім'я, роль і вигляд аватара. Усі вигадані. */
+const CAST = {
+  irina:  {name:`Ірина Гнатюк`, role:`редакторка`, av:{bg:'#f2d7d0', skin:'#e9b99a', hair:'#3b2a20', style:'bun', shirt:'#8e2b2b', glasses:true}},
+  solo:   {name:`Соломія`, role:`голова ГО «Перехрестя», 21 рік`, av:{bg:'#d8ecd9', skin:'#f1c7a5', hair:'#b98a4c', style:'long', shirt:'#2f7d4f'}},
+  artem:  {name:`Артем`, role:`фінанси ГО, 23 роки`, av:{bg:'#d6e2f3', skin:'#c98e6a', hair:'#1f1a17', style:'short', shirt:'#2d5aa0', beard:true}},
+  danylo: {name:`Данило`, role:`колишній волонтер, 19 років`, av:{bg:'#efe2c9', skin:'#f3cfb3', hair:'#b4471f', style:'curly', shirt:'#6b6b6b'}},
+  petro:  {name:`Петро Гаврилюк`, role:`депутат міськради`, av:{bg:'#e6e0f0', skin:'#e2b08f', hair:'#a0a0a0', style:'bald', shirt:'#5a4632', mustache:true}},
+  natalia:{name:`Наталія`, role:`юристка ЦНАП`, av:{bg:'#f4e6c4', skin:'#a8714f', hair:'#2a1d18', style:'bob', shirt:'#4b3f72', glasses:true}},
+  marta:  {name:`Марта`, role:`програмна менеджерка фонду «Обрій»`, av:{bg:'#d9eef0', skin:'#eec1a0', hair:'#5b3a29', style:'long', shirt:'#0f7c86'}},
+  yurii:  {name:`Юрій`, role:`експерт з оцінювання проєктів`, av:{bg:'#e9e9e9', skin:'#e0ac88', hair:'#7d7d7d', style:'short', shirt:'#3c4a3e', glasses:true, beard:true}},
+  oksana: {name:`Оксана`, role:`фахівчиня з молодіжної політики громади`, av:{bg:'#f6dbe6', skin:'#f0c4a6', hair:'#7a4b2a', style:'bun', shirt:'#b0507a'}},
+  vasyl:  {name:`Василь`, role:`підрядник, меблева майстерня`, av:{bg:'#e3e8d5', skin:'#d79f7c', hair:'#3d3027', style:'short', shirt:'#6d7f3a', mustache:true}},
+  olena:  {name:`Олена`, role:`голова ГО «Мамин клуб»`, av:{bg:'#f8e3cf', skin:'#e8b593', hair:'#2e2420', style:'bob', shirt:'#c06c2b'}},
+  pens:   {name:`Пенсіонерка`, role:``, av:{bg:'#ece3f5', skin:'#efc2a4', hair:'#cfcfcf', style:'bun', shirt:'#7b5ea7', glasses:true}},
+  biz:    {name:`Підприємець`, role:``, av:{bg:'#e2e2e2', skin:'#d9a27c', hair:'#4a3b30', style:'short', shirt:'#444444'}},
+  vika:   {name:`Віка`, role:`школярка, 16 років`, av:{bg:'#fde2d8', skin:'#f3cfb3', hair:'#2a1d18', style:'long', shirt:'#e07a5f'}},
+  man:    {name:`Чоловік із пакетами`, role:``, av:{bg:'#efe6d6', skin:'#e2b08f', hair:'#8d8d8d', style:'short', shirt:'#8a6d3b', beard:true}},
+  kid:    {name:`Марко`, role:`школяр, 15 років`, av:{bg:'#dbeeff', skin:'#c98e6a', hair:'#1f1a17', style:'curly', shirt:'#3a7bd5'}},
+  girl2:  {name:`Аліна`, role:`школярка, 14 років`, av:{bg:'#fff0c9', skin:'#f1c7a5', hair:'#d9a441', style:'bun', shirt:'#2f9e8f'}},
+  secr:   {name:`Секретар ради`, role:``, av:{bg:'#e6e6ef', skin:'#e0ac88', hair:'#3b3b3b', style:'short', shirt:'#2c3e50', glasses:true}}
+};
+
+/* Записи блокнота: ключ → текст. */
+const NOTES = {
+  solo_story: `Соломія: друзі хотіли зробити простір для молоді в порожній бібліотеці. У громаді відповіли: «А з ким підписувати договір?»`,
+  solo_motive: `Соломія: «Печатка нічого не робить сама, але з нею тебе починають слухати».`,
+  solo_claim: `Соломія: «Зареєструвалися за один день». НЕ ПЕРЕВІРЕНО.`,
+  solo_true: `Збори 3 березня, реєстрація 24 березня. Перший пакет повернули через помилку в статуті.`,
+  reg: `Реєстр: ГО «Перехрестя», юрособа, 3 засновники, керівниця Соломія Ткачук. Мета: участь молоді в житті громади.`,
+  law: `Юристка: ГО з юрособою або без (за повідомленням). Засновників щонайменше двоє, для молодіжної ГО від 14 років. Реєстрація безоплатна. Доходи не можна ділити між членами.`,
+  vox: `Вокс-поп: «А що вони роблять?»; «Аби не політика»; «У нас вечорами нема куди піти»; «Знову грантоїди».`,
+  dep_quote: `Депутат: «Усі ці ГО створюють під гранти».`,
+  dep_noproof: `Депутат не навів жодного прикладу: «Ну так усі кажуть».`,
+  arch: `Архів: реальні кейси з Чернівців, Первомайська і державного рівня (з посиланнями).`,
+  c2_meeting: `Збори: 12 людей, суперечка Артема (платити координаторові) і Соломії («станемо конторою»). Голосування за заявку: 7 «за», 3 «проти», 2 утрималися.`,
+  c2_procedure: `За статутом вищий орган — загальні збори: обирають голову й правління, затверджують плани, змінюють статут.`,
+  danylo_anon: `Данило дозволив анонімну цитату: «Пів року щовечора, а подякували "всім волонтерам"».`,
+  danylo_bg: `Данило розповів про вигорання. Лише для розуміння, без цитат.`,
+  danylo_secret: `Таємний запис розмови з Данилом.`,
+  artem: `Артем: «Я працюю 30 годин на тиждень безкоштовно. Хочу, щоб координатор мав хоча б мінімалку. Це не жадібність».`,
+  c2_report: `Фінзвіт ГО за пів року: 18 400 грн внесків і пожертв; витрати на фарбу, друк, чай. Зарплат немає.`,
+  kids: `Кіновечір, 23 підлітки: «Тут не треба платити»; «Прийшла, бо подруга покликала».`,
+  rumor: `Депутат: голова ГО нібито донька заступника міського голови. НЕ ПЕРЕВІРЕНО.`,
+  rumor_checked: `Перевірка чутки про «доньку заступника»: родинного зв'язку не знайдено.`,
+  c3_mood: `Соломія після відмови: половина команди хоче закриватися.`,
+  c3_sources: `Марта: внески, пожертви, краудфандинг, гранти, бюджетні конкурси, соцпідприємництво. Оцінюють логіку, а не «хороших людей».`,
+  c3_found: `Ваш власний розбір заявки.`,
+  c3_errors: `Юрій: мета сформульована як захід; «вся молодь» замість конкретної аудиторії; результат не виміряти; 41% бюджету на харчування.`,
+  leak_anon: `Таблиця комісії перевірена. Беремо лише знеособлене: «Перехрестя» 61 бал зі 100, прохідний 70.`,
+  leak_full: `Таблиця комісії з іменами експертів і чужими заявками. Автентичність не перевірено.`,
+  other: `Олена («Мамин клуб»): грант із третьої спроби. «Перестали писати, які ми хороші, і почали писати, що зміниться».`,
+  c4_contract: `День 1: договір, календарний план, звітність. Соломія: «наш проєкт фестиваль», секретар ради: «програма ради».`,
+  c4_terms: `Оксана: програма — довгостроковий документ громади; проєкт — обмежена в часі робота з метою і результатом; фестиваль — захід у межах проєкту.`,
+  delay: `День 47: підрядник зірвав постачання меблів, відкриття переноситься на 3 тижні.`,
+  vasyl: `Підрядник Василь: майстерня стояла через відключення світла, лист про затримку ГО отримала вчасно.`,
+  fest: `Фестиваль: близько 90 людей, черга на майстер-клас із подкастингу.`,
+  c4_result: `День 100: 6 із 8 заходів, 140 учасників замість 200; 2 заходи скасовано через тривоги, раду повідомлено. Простір працює і далі.`
+};
+
+const CH = [``,`Розділ 1. Хто вони такі?`,`Розділ 2. Що тримає їх разом`,`Розділ 3. Чому фонд сказав «ні»`,`Розділ 4. Сто днів одного проєкту`,`Фінал`];
+
+const SCENES = {
+
+/* ================= ОБКЛАДИНКА ================= */
+start: {
+  ch:0, loc:'street', place:`Ліскова`, when:`Березень`,
+  html: s => `
+    <div class="kicker">Інтерактивна історія</div>
+    <h1>Здати в номер</h1>
+    <p>Ви стажер місцевого видання «Ліскова.Медіа». Редакторка доручає вам серію з чотирьох матеріалів про молодіжну громадську організацію «Перехрестя», яку в місті обговорюють усі, хоча мало хто розуміє, чим вона займається.</p>
+    <p>У кожному розділі у вас обмежений час до дедлайну. Ви обираєте, з ким говорити і що перевіряти, а потім пишете матеріал тільки з того, що встигли зібрати в блокнот. Редакторка оцінить текст, читачі на нього відреагують, а наслідки ваших рішень перейдуть у наступні розділи.</p>
+    <div class="cast">${['irina','solo','artem','danylo','petro','natalia','marta','yurii','oksana'].map(k=>avatar(k)).join('')}</div>
+    <p class="src">Тривалість: 30–40 хвилин. Прогрес зберігається у вашому браузері.</p>
+    <div class="disclaimer">Громада Ліскова, видання, ГО «Перехрестя» і всі персонажі вигадані. Їхні репліки є реконструкціями типових ситуацій громадського сектору і не належать реальним людям. Реальні кейси й цитати позначено червоною позначкою і подано з посиланнями на першоджерела.</div>`,
+  choices: [ {text:`Почати`, to:`c1_intro`, primary:true} ]
+},
+
+/* ================= РОЗДІЛ 1 ================= */
+c1_intro: {
+  ch:1, loc:'newsroom', place:`Редакція «Ліскова.Медіа»`, when:`Понеділок, 09:30`,
+  kicker:`Розділ 1 з 4 · Пояснювальний матеріал`,
+  chat: [
+    ['sys',`Ірина Гнатюк кличе вас до свого столу`],
+    ['irina',`У місті з'явилася молодіжна ГО «Перехрестя». Половина коментаторів у нашому каналі вважає їх героями, половина шахраями.`],
+    ['irina',`Поясни читачам, що це за організація, як вона з'явилася і що такі організації взагалі можуть.`],
+    ['me',`Скільки в мене часу?`],
+    ['irina',`Здаєш завтра до обіду. Пиши тільки те, що перевірив.`]
+  ],
+  onEnter: s => { s.time = 6; },
+  choices: [ {text:`Скласти план`, to:`c1_hub`, primary:true} ]
+},
+c1_hub: {
+  ch:1, hub:true, loc:'newsroom', place:`Ваш стіл у редакції`, when:`До дедлайну 6 годин`,
+  choices: [
+    {text:`Інтерв'ю із засновницею ГО`, cost:2, to:`c1_solo`, once:`c1_solo`},
+    {text:`Витяг із державного реєстру`, cost:1, to:`c1_reg`, once:`c1_reg`},
+    {text:`Консультація юристки ЦНАП`, cost:1, to:`c1_law`, once:`c1_law`},
+    {text:`Вокс-поп біля ринку`, cost:2, to:`c1_vox`, once:`c1_vox`},
+    {text:`Подзвонити депутатові міськради`, cost:1, to:`c1_dep`, once:`c1_dep`},
+    {text:`Архів редакції: що вдавалося молоді в інших громадах`, cost:1, to:`c1_arch`, once:`c1_arch`},
+    {text:`Сідаю писати`, to:`c1_ethics`, primary:true, cond: s => s.done.some(d=>d.startsWith('c1_'))}
+  ]
+},
+c1_solo: {
+  ch:1, loc:'cafe', place:`Кав'ярня біля автостанції`, when:`Понеділок, 11:00`,
+  chat: [
+    ['sys',`Ви замовляєте два американо`],
+    ['me',`Розкажи, з чого все почалося?`],
+    ['solo',`Нас було п'ятеро друзів. Колишня бібліотека на Шевченка стоїть порожня вже три роки, і ми пішли до громади: дайте, ми зробимо там простір для молоді.`],
+    ['solo',`Нам сказали: «А з ким підписувати договір? З вами п'ятьма?» Тоді ми й вирішили реєструватися.`],
+    ['solo',`Нас ніхто не сприймав, поки ми були просто компанією друзів. Печатка нічого не робить сама, але з нею тебе починають слухати.`],
+    ['solo',`А зареєструвалися ми за один день і безкоштовно, це взагалі не складно 🙂`]
+  ],
+  onEnter: s => { addNote(s,'solo_story'); addNote(s,'solo_motive'); },
+  choices: [
+    {text:`«Стоп. За один день від зборів до реєстрації?»`, to:`c1_solo_check`},
+    {text:`Записати як є і подякувати`, to:`c1_hub`, effect: s => { addNote(s,'solo_claim'); }}
+  ]
+},
+c1_solo_check: {
+  ch:1, loc:'cafe', place:`Кав'ярня біля автостанції`, when:`Понеділок, 11:40`,
+  chat: [
+    ['solo',`Ну... якщо чесно, ні 😅`],
+    ['solo',`Установчі збори були на початку березня, а зареєстрували нас аж наприкінці місяця. Перший раз документи повернули: ми переписали статут з інтернету, а там була чужа назва органу управління.`],
+    ['solo',`Але сама процедура справді безкоштовна, це правда.`],
+    ['sys',`Деталь, яку читачі запам'ятають: чужий статут коштував трьох тижнів`]
+  ],
+  onEnter: s => { addNote(s,'solo_true'); s.acc++; },
+  choices: [ {text:`Повернутися до плану`, to:`c1_hub`, primary:true} ]
+},
+c1_reg: {
+  ch:1, loc:'newsroom', place:`Ваш стіл у редакції`, when:`Пошук у реєстрі`,
+  chat: s => [
+    ['sys',`Ви вводите назву в пошук державного реєстру`],
+    ['doc',`ЄДИНИЙ ДЕРЖАВНИЙ РЕЄСТР (фрагмент)
+Найменування: ГРОМАДСЬКА ОРГАНІЗАЦІЯ «ПЕРЕХРЕСТЯ»
+Форма: громадська організація
+Дата державної реєстрації: 24.03
+Засновники: 3 фізичні особи
+Керівник: ТКАЧУК СОЛОМІЯ
+Мета (за статутом): сприяння участі молоді
+в житті громади, розвиток неформальної освіти
+
+[документ вигаданий, наведено як приклад]`],
+    ...(has(s,'solo_claim') || s.flags.claimCaught ? [['sys',`На сторінці ГО фото з установчих зборів від 3 березня. «Один день» не сходиться`]] : [])
+  ],
+  onEnter: s => { addNote(s,'reg'); if (has(s,'solo_claim')){ dropNote(s,'solo_claim'); addNote(s,'solo_true'); s.flags.claimCaught=true; s.acc++; } },
+  choices: [ {text:`Повернутися до плану`, to:`c1_hub`, primary:true} ]
+},
+c1_law: {
+  ch:1, loc:'office', place:`ЦНАП, кабінет 4`, when:`Понеділок, 14:00`,
+  chat: [
+    ['me',`Що треба, щоб створити громадську організацію?`],
+    ['natalia',`ГО можна створити зі статусом юридичної особи або без нього, тоді достатньо повідомити про утворення. Але без статусу юрособи немає рахунку, не підпишеш договір оренди і не отримаєш грант.`],
+    ['natalia',`Засновників має бути щонайменше двоє. Для молодіжної організації засновникам може бути від 14 років.`],
+    ['natalia',`Державна реєстрація для ГО безоплатна. Найчастіше документи повертають через статут, переписаний з чужого.`],
+    ['natalia',`І ще: неприбутковість означає, що доходи не можна ділити між засновниками чи членами. Усе йде на статутну мету.`]
+  ],
+  onEnter: s => { addNote(s,'law'); s.acc++; },
+  choices: [ {text:`Повернутися до плану`, to:`c1_hub`, primary:true} ]
+},
+c1_vox: {
+  ch:1, loc:'market', place:`Центральний ринок`, when:`Понеділок, 16:00`,
+  chat: [
+    ['me',`Ви чули про ГО «Перехрестя»? Що думаєте?`],
+    ['pens',`Чула. А що вони роблять?`],
+    ['biz',`Хай роблять, аби не політика.`],
+    ['vika',`Я б туди ходила! У нас вечорами нема куди піти, крім торгового центру.`],
+    ['man',`Знову грантоїди. Попиляють і розбіжаться.`]
+  ],
+  onEnter: s => { addNote(s,'vox'); s.bal++; },
+  choices: [ {text:`Повернутися до плану`, to:`c1_hub`, primary:true} ]
+},
+c1_dep: {
+  ch:1, loc:'phone', place:`Телефонна розмова`, when:`Понеділок, 17:10`,
+  chat: [
+    ['sys',`Дзвінок: Петро Гаврилюк`],
+    ['petro',`«Перехрестя»? Слухайте, усі ці ГО створюють під гранти.`],
+    ['petro',`Молодь треба в школу, на гуртки, а не в організації.`]
+  ],
+  onEnter: s => { addNote(s,'dep_quote'); },
+  choices: [
+    {text:`«Можете навести приклад, коли ГО в громаді використала грант не за призначенням?»`, to:`c1_dep2`},
+    {text:`«Дякую, цього достатньо»`, to:`c1_hub`}
+  ]
+},
+c1_dep2: {
+  ch:1, loc:'phone', place:`Телефонна розмова`, when:`Понеділок, 17:14`,
+  chat: [
+    ['petro',`Ну конкретно... Ну так усі кажуть. Ви ж розумієте.`],
+    ['sys',`Дзвінок завершено`],
+    ['sys',`Скепсис депутата варто показати, але тепер ви знаєте, що за ним немає фактів`]
+  ],
+  onEnter: s => { addNote(s,'dep_noproof'); s.bal++; s.acc++; },
+  choices: [ {text:`Повернутися до плану`, to:`c1_hub`, primary:true} ]
+},
+c1_arch: {
+  ch:1, loc:'archive', place:`Архів редакції`, when:`Понеділок, 18:00`,
+  html: s => `
+    <p>Ви шукаєте, чого досягали молодіжні ініціативи в інших громадах. Ці історії реальні, цитати наведено дослівно з публікацій інших медіа.</p>
+    <div class="card"><div class="speaker">Чернівці: ГО «Центр молоді Чернівців» <span class="tag real">реальний кейс</span></div>
+    <p>Організація створювала молодіжний простір «Резиденція молоді» 2,5 року. Ремонт коштував приблизно 2,5 млн грн з міського бюджету та програми «Будуємо Україну разом», меблі й обладнання команда закрила грантами.</p>
+    <div class="quote">«Я не хочу, щоб розвиток молодіжної політики брали на свій контроль депутати та чиновники».</div>
+    <div class="src">Олександр Гуляєв, співзасновник ГО. Джерело: <a href="https://suspilne.media/chernivtsi/270572-akou-e-molodizna-politika-v-cernivcah-intervu-zi-spivzasnovnikom-go-centr-molodi-cernivciv/" target="_blank" rel="noopener">Суспільне Чернівці, 12.08.2022</a></div></div>
+    <div class="card"><div class="speaker">Первомайськ: Молодіжна рада <span class="tag real">реальний кейс</span></div>
+    <p>Інший інструмент участі: консультативно-дорадчий орган при виконкомі, затверджений 9 серпня 2024 року. Рада опитала молодь, виграла грант і відкрила молодіжний простір у Палаці культури.</p>
+    <div class="quote">«У якийсь момент ми прямо вперлися у відсутність фізичного простору, куди б могла прийти молодь».</div>
+    <div class="src">Анна Чумак, голова Молодіжної ради Первомайська. Джерело: <a href="https://thegard.city/articles/472499/anna-chumak-molodizhna-rada-pervomajsk" target="_blank" rel="noopener">Гард.City, 15.07.2026</a></div></div>
+    <div class="card"><div class="speaker">Державний рівень: закон про молодіжну політику <span class="tag real">реальний кейс</span></div>
+    <p>У 2020 році об'єднання дев'яти найбільших молодіжних організацій НУМО публічно вимагало ухвалити закон «Про основні засади молодіжної політики». 27 квітня 2021 року Верховна Рада його ухвалила: «за» проголосував 321 народний депутат.</p>
+    <div class="quote">«Найкращим реалізатором молодіжної політики є сама молодь».</div>
+    <div class="src">Із заяви НУМО. Джерела: <a href="https://texty.org.ua/fragments/100434/molodizhni-orhanizaciyi-vymahayut-zaluchaty-yih-do-molodizhnoyi-polityky/" target="_blank" rel="noopener">Тексти, 10.03.2020</a>; <a href="https://www.ukrinform.ua/rubric-polytics/3236153-rada-uhvalila-zakon-pro-molodiznu-politiku.html" target="_blank" rel="noopener">Укрінформ, 27.04.2021</a></div></div>
+    ${SYLA_MRIY.show ? `<div class="card"><div class="speaker">${SYLA_MRIY.where}: ${SYLA_MRIY.title} <span class="tag real">реальний кейс</span></div>
+    <p>${SYLA_MRIY.text}</p><div class="quote">«${SYLA_MRIY.quote}»</div>
+    <div class="src">${SYLA_MRIY.who}. Автор гри очолює цю організацію.</div></div>` : ``}`,
+  onEnter: s => { addNote(s,'arch'); s.acc++; },
+  choices: [ {text:`Повернутися до плану`, to:`c1_hub`, primary:true} ]
+},
+c1_ethics: {
+  ch:1, loc:'phone', place:`Месенджер`, when:`Понеділок, 21:40`,
+  chat: [
+    ['solo',`Привіт! А можна я гляну текст перед публікацією? Просто хочу, щоб усе було правильно 🙏`]
+  ],
+  choices: [
+    {text:`Надіслати весь текст: нехай поправить, що хоче`, to:`c1_write`, effect: s => { s.ind--; s.flags.sentText=true; }},
+    {text:`«Можу надіслати лише твої цитати, щоб ти звірила»`, to:`c1_write`, effect: s => { s.trust++; }},
+    {text:`«Ні, ми так не працюємо» і більше нічого`, to:`c1_write`, effect: s => { s.trust--; }}
+  ]
+},
+c1_write: {
+  ch:1, loc:'newsroom', place:`Ваш стіл у редакції`, when:`Вівторок, 09:00`,
+  html: s => `<h2>Заголовок</h2><p>Відкритий документ, блокнот поруч. Заголовок задає тон усьому матеріалу.</p>`,
+  choices: [
+    {text:`«Як група друзів стає громадською організацією і що це змінює»`, to:`c1_quote`, effect: s => { s.flags.h1='explain'; s.bal++; }},
+    {text:`«Молодь заснувала ГО. Заради чого?»`, to:`c1_quote`, effect: s => { s.flags.h1='sensation'; s.bal--; }},
+    {text:`«Хоробра молодь змінює громаду»`, to:`c1_quote`, effect: s => { s.flags.h1='promo'; s.ind--; }}
+  ]
+},
+c1_quote: {
+  ch:1, loc:'newsroom', place:`Ваш стіл у редакції`, when:`Вівторок, 10:30`,
+  html: s => `<h2>Головна цитата</h2><p>Яку цитату поставите на початок? Доступні лише ті, що є в блокноті.</p>`,
+  choices: [
+    {text:`Соломія: «Печатка нічого не робить сама...»`, to:`c1_review`, cond: s=>has(s,'solo_motive'), effect: s => { s.flags.q1='solo'; }},
+    {text:`Депутат: «Усі ці ГО створюють під гранти»`, to:`c1_review`, cond: s=>has(s,'dep_quote'), effect: s => { s.flags.q1='dep'; if(!has(s,'dep_noproof')) {s.acc--; s.bal--;} }},
+    {text:`Віка: «У нас вечорами нема куди піти»`, to:`c1_review`, cond: s=>has(s,'vox'), effect: s => { s.flags.q1='vox'; s.bal++; }},
+    {text:`Олександр Гуляєв, Чернівці (реальна цитата з джерелом)`, to:`c1_review`, cond: s=>has(s,'arch'), effect: s => { s.flags.q1='arch'; s.acc++; }},
+    {text:`Без цитати, одразу до суті`, to:`c1_review`, effect: s => { s.flags.q1='none'; }}
+  ]
+},
+c1_review: {
+  ch:1, loc:'newsroom', place:`Стіл редакторки`, when:`Вівторок, 12:00`,
+  onEnter: s => { if (has(s,'solo_claim')) s.acc--; },
+  chat: s => {
+    const L = [];
+    if (!has(s,'law') && !has(s,'reg')) L.push(`Де юридична частина? Читач так і не зрозумів, чим ГО відрізняється від компанії друзів.`);
+    else L.push(`Юридичну частину пояснено зрозуміло, без канцеляриту. Добре.`);
+    if (has(s,'solo_claim')) L.push(`«Зареєструвалися за один день»: ти це перевіряв? У реєстрі інша дата. Я виправила, але наступного разу перевіряй сам.`);
+    if (has(s,'solo_true')) L.push(`Історія з поверненими документами чудова. Саме такого факту бракує всім пресрелізам.`);
+    if (!has(s,'solo_story')) L.push(`Ти пишеш про організацію і жодного разу не поговорив із нею самою?`);
+    if (has(s,'dep_quote') && !has(s,'dep_noproof')) L.push(`Звинувачення депутата стоїть без жодного уточнення. Або фактаж, або фраза про те, що фактів він не навів.`);
+    if (has(s,'dep_noproof')) L.push(`Добре, що дотиснув депутата. Скепсис у тексті є, і читач бачить, що за ним немає фактів.`);
+    if (!has(s,'vox') && !has(s,'dep_quote')) L.push(`У тексті звучить лише сама ГО. Де інші погляди?`);
+    if (has(s,'arch')) L.push(`Приклади з інших громад дають масштаб. І добре, що з посиланнями.`);
+    if (s.flags.h1==='promo') L.push(`«Хоробра молодь змінює громаду» — це пресреліз. Заголовок міняю.`);
+    if (s.flags.h1==='sensation') L.push(`Заголовок клікбейтний. Пропущу, але готуйся до коментарів.`);
+    if (s.flags.sentText) L.push(`І ще: ти надіслав героїні весь текст? Вона переписала два абзаци про себе. Більше так не роби.`);
+    return L.map(t=>['irina',t]);
+  },
+  choices: [ {text:`Опублікувати`, to:`c1_reaction`, primary:true} ]
+},
+c1_reaction: {
+  ch:1, loc:'phone', place:`Телеграм-канал «Ліскова.Медіа»`, when:`Вівторок, 18:00`,
+  html: s => post(headline1(s), 1240 + s.bal*180),
+  chat: s => {
+    const c = [];
+    if (s.flags.h1==='sensation' || s.flags.q1==='dep') { c.push(['r:Олег К.',`Я ж казав, що там щось нечисто.`]); c.push(['r:Марія',`А де в тексті хоч один факт про це «нечисто»?`]); }
+    else c.push(['r:Марія',`Не знала, що реєстрація безкоштовна. Ми з подругами давно хочемо зробити клуб для мам з дітьми.`]);
+    if (has(s,'vox')) c.push(['r:Віка',`Це мене цитували))) Коли вже відкриють простір?`]);
+    c.push(['r:Андрій',`Гранти, гранти. Краще напишіть, звідки в них гроші і хто там усе вирішує.`]);
+    c.push(['irina',`Читачі питають, що в них усередині. Завтра готуй репортаж.`]);
+    return c;
+  },
+  choices: [ {text:`До розділу 2`, to:`c2_intro`, primary:true} ]
+},
+
+/* ================= РОЗДІЛ 2 ================= */
+c2_intro: {
+  ch:2, loc:'newsroom', place:`Редакція «Ліскова.Медіа»`, when:`Середа, 09:30`,
+  kicker:`Розділ 2 з 4 · Репортаж`,
+  chat: s => [
+    ['irina',`Половина міста думає, що в ГО всі отримують зарплату. Покажи, як вони живуть насправді.`],
+    ['irina',`Хто ухвалює рішення, хто працює, чому люди залишаються і чому йдуть.`],
+    ...(s.trust<0 ? [['sys',`Соломія відповідає на ваші повідомлення сухо й коротко: після минулого тексту вона вам не дуже довіряє`]] : []),
+    ['irina',`Здаєш у п'ятницю.`]
+  ],
+  onEnter: s => { s.time = 6; },
+  choices: [ {text:`Скласти план`, to:`c2_hub`, primary:true} ]
+},
+c2_hub: {
+  ch:2, hub:true, loc:'newsroom', place:`Ваш стіл у редакції`, when:`До дедлайну 6 годин`,
+  choices: [
+    {text:`Загальні збори «Перехрестя»`, cost:2, to:`c2_meeting`, once:`c2_meeting`},
+    {text:`Кава з Данилом, який пішов із команди`, cost:2, to:`c2_danylo`, once:`c2_danylo`},
+    {text:`Розмова з Артемом, який відповідає за фінанси`, cost:1, to:`c2_artem`, once:`c2_artem`},
+    {text:`Фінансовий звіт на сторінці ГО`, cost:1, to:`c2_report`, once:`c2_report`},
+    {text:`Кіновечір для підлітків`, cost:1, to:`c2_kids`, once:`c2_kids`},
+    {text:`Пропущений дзвінок від депутата Гаврилюка`, cost:1, to:`c2_rumor`, once:`c2_rumor`},
+    {text:`Сідаю писати`, to:`c2_write`, primary:true, cond: s => s.done.some(d=>d.startsWith('c2_'))}
+  ]
+},
+c2_meeting: {
+  ch:2, loc:'classroom', place:`Клас №12, школа №3`, when:`Середа, 19:00`,
+  chat: [
+    ['sys',`12 людей, порядок денний на дошці: звіт голови, план на літо, «питання грошей»`],
+    ['solo',`За пів року ми провели 14 зустрічей і зібрали 18 тисяч. Простору досі немає.`],
+    ['artem',`Ми не витягнемо все на ентузіазмі. Треба писати заявку на грант і платити хоча б одному координаторові.`],
+    ['solo',`Я боюся, що ми станемо конторою, яка пише звіти замість того, щоб робити справу.`],
+    ['artem',`А я боюся, що ми розвалимося, як усі. Половина вже не приходить.`],
+    ['sys',`Голосування: подавати заявку. 7 «за», 3 «проти», 2 утрималися`]
+  ],
+  onEnter: s => addNote(s,'c2_meeting'),
+  choices: [
+    {text:`Записати суперечку дослівно, з іменами й емоціями`, to:`c2_hub`, effect: s => { s.flags.quarrel=true; }},
+    {text:`Записати суть і з'ясувати, хто за статутом ухвалює рішення`, to:`c2_hub`, effect: s => { addNote(s,'c2_procedure'); s.acc++; }}
+  ]
+},
+c2_danylo: {
+  ch:2, loc:'cafe', place:`Кав'ярня біля парку`, when:`Четвер, 18:30`,
+  chat: [
+    ['danylo',`Одразу кажу: це не для запису.`],
+    ['danylo',`Я тягнув усю логістику: стільці, звук, домовленості зі школою. Пів року кожен вечір.`],
+    ['danylo',`А на підсумковій зустрічі подякували «всім волонтерам». Я просто вигорів і пішов.`],
+    ['danylo',`Не хочу, щоб це виглядало як помста. Вони нормальні, просто ніхто не думав, скільки це коштує людям.`],
+    ['sys',`Вигорання руйнує ініціативи частіше за брак грошей. Але Данило говорить off the record`]
+  ],
+  choices: [
+    {text:`Попросити дозволу на анонімну цитату`, to:`c2_danylo2`, effect: s => { addNote(s,'danylo_anon'); s.trust++; }},
+    {text:`Пообіцяти, що нічого з цього не потрапить у текст`, to:`c2_hub`, effect: s => { addNote(s,'danylo_bg'); s.trust++; }},
+    {text:`Непомітно увімкнути диктофон у кишені`, to:`c2_hub`, effect: s => { addNote(s,'danylo_secret'); s.trust-=2; s.ind--; }}
+  ]
+},
+c2_danylo2: {
+  ch:2, loc:'cafe', place:`Кав'ярня біля парку`, when:`Четвер, 19:10`,
+  chat: [
+    ['danylo',`Без імені й без подробиць, з яких мене впізнають? Добре.`],
+    ['danylo',`Може, хоч наступним волонтерам від цього буде легше.`]
+  ],
+  choices: [ {text:`Повернутися до плану`, to:`c2_hub`, primary:true} ]
+},
+c2_artem: {
+  ch:2, loc:'street', place:`Біля колишньої бібліотеки`, when:`Четвер, 12:00`,
+  chat: [
+    ['me',`Тебе називають головним прихильником грантів. Чому?`],
+    ['artem',`Я працюю 30 годин на тиждень безкоштовно. Паралельно навчаюся і підробляю.`],
+    ['artem',`Я хочу, щоб координатор отримував хоча б мінімалку з гранту. Це не жадібність, це спосіб не загубити людей.`],
+    ['artem',`Данила ми вже загубили.`]
+  ],
+  onEnter: s => { addNote(s,'artem'); s.bal++; },
+  choices: [ {text:`Повернутися до плану`, to:`c2_hub`, primary:true} ]
+},
+c2_report: {
+  ch:2, loc:'newsroom', place:`Ваш стіл у редакції`, when:`Четвер, 14:00`,
+  chat: [
+    ['sys',`Сторінка ГО «Перехрестя», розділ «Звіти»`],
+    ['doc',`ФІНАНСОВИЙ ЗВІТ, ВЕРЕСЕНЬ–БЕРЕЗЕНЬ
+Надходження:
+  членські внески ........ 9 600 грн
+  пожертви ............... 8 800 грн
+  РАЗОМ ................. 18 400 грн
+Витрати:
+  фарба, пензлі .......... 6 150 грн
+  друк афіш .............. 2 900 грн
+  чай, вода на заходах ... 3 470 грн
+  залишок ................ 5 880 грн`],
+    ['sys',`Зарплат у звіті немає`]
+  ],
+  onEnter: s => { addNote(s,'c2_report'); s.acc++; },
+  choices: [ {text:`Повернутися до плану`, to:`c2_hub`, primary:true} ]
+},
+c2_kids: {
+  ch:2, loc:'classroom', place:`Кіновечір у класі №12`, when:`Четвер, 18:00`,
+  chat: [
+    ['sys',`23 підлітки, проєктор, позичений у школи`],
+    ['kid',`Тут не треба платити. І ніхто не каже, що ти щось робиш не так.`],
+    ['girl2',`Я вперше прийшла, бо подруга покликала. Наступного разу буду вести обговорення фільму!`]
+  ],
+  onEnter: s => { addNote(s,'kids'); s.bal++; },
+  choices: [ {text:`Повернутися до плану`, to:`c2_hub`, primary:true} ]
+},
+c2_rumor: {
+  ch:2, loc:'phone', place:`Телефонна розмова`, when:`Четвер, 16:20`,
+  chat: [
+    ['petro',`Ви знаєте, що голова цієї ГО — донька заступника міського голови? Ось про що треба писати!`],
+    ['me',`Звідки така інформація?`],
+    ['petro',`Усе місто знає.`]
+  ],
+  choices: [
+    {text:`Перевірити у відкритих джерелах: реєстри, декларації, соцмережі`, to:`c2_rumor2`},
+    {text:`«Дякую, візьму до уваги»`, to:`c2_hub`, effect: s => addNote(s,'rumor')}
+  ]
+},
+c2_rumor2: {
+  ch:2, loc:'newsroom', place:`Ваш стіл у редакції`, when:`Четвер, 16:50`,
+  chat: [
+    ['sys',`Прізвища різні. У декларації заступника міського голови серед членів сім'ї Соломії немає. У соцмережах жодного зв'язку`],
+    ['sys',`Чутку не підтверджено`]
+  ],
+  onEnter: s => { addNote(s,'rumor_checked'); s.acc++; },
+  choices: [ {text:`Повернутися до плану`, to:`c2_hub`, primary:true} ]
+},
+c2_write: {
+  ch:2, loc:'newsroom', place:`Ваш стіл у редакції`, when:`П'ятниця, 09:00`,
+  html: s => `<h2>Про що репортаж?</h2><p>Оберіть головну лінію. Доступні лише ті, для яких ви маєте матеріал.</p>`,
+  choices: [
+    {text:`«Хто вирішує в ГО і чому люди звідти йдуть»`, to:`c2_rumorq`, cond: s=>has(s,'c2_meeting'), effect: s => { s.flags.h2='inside'; s.bal++; }},
+    {text:`«Сварка в "Перехресті": команда на межі розколу»`, to:`c2_rumorq`, cond: s=>has(s,'c2_meeting'), effect: s => { s.flags.h2='quarrel'; s.bal--; s.trust--; }},
+    {text:`«Скільки коштує безоплатна робота»`, to:`c2_rumorq`, cond: s=>has(s,'danylo_anon')||has(s,'artem')||has(s,'danylo_secret'), effect: s => { s.flags.h2='burnout'; s.acc++; }},
+    {text:`«Один вечір у "Перехресті"»`, to:`c2_rumorq`, effect: s => { s.flags.h2='evening'; }}
+  ]
+},
+c2_rumorq: {
+  ch:2, loc:'newsroom', place:`Ваш стіл у редакції`, when:`П'ятниця, 10:30`,
+  html: s => has(s,'rumor')||has(s,'rumor_checked') ? `<h2>Чутка про «доньку заступника»</h2><p>Згадувати її в тексті?</p>` : `<h2>Майже готово</h2><p>Текст складено. Лишилося віддати редакторці.</p>`,
+  choices: [
+    {text:`Згадати: «за словами депутата, голова ГО — донька заступника»`, to:`c2_review`, cond: s=>has(s,'rumor'), effect: s => { s.flags.rumorPub=true; s.acc-=2; }},
+    {text:`Написати, що чутку перевірили і вона не підтвердилася`, to:`c2_review`, cond: s=>has(s,'rumor_checked'), effect: s => { s.acc++; s.flags.rumorDebunk=true; }},
+    {text:`Не згадувати`, to:`c2_review`, cond: s=>has(s,'rumor')||has(s,'rumor_checked')},
+    {text:`Віддати редакторці`, to:`c2_review`, primary:true, cond: s=>!has(s,'rumor')&&!has(s,'rumor_checked')}
+  ]
+},
+c2_review: {
+  ch:2, loc:'newsroom', place:`Стіл редакторки`, when:`П'ятниця, 12:00`,
+  chat: s => {
+    const L = [];
+    if (has(s,'c2_procedure')) L.push(`Пояснення про загальні збори дуже потрібне: місто думає, що там усе вирішує «голова».`);
+    if (s.flags.h2==='quarrel') L.push(`Заголовок про «розкол» перебільшує. Вони проголосували й працюють далі. Соломія вже написала мені, що ти зробив із них посміховисько.`);
+    if (has(s,'danylo_anon')) L.push(`Анонімна цитата колишнього волонтера тримає весь текст. І ти правильно попросив дозволу.`);
+    if (has(s,'danylo_secret')) L.push(`Звідки в тебе запис Данила? Він щойно дзвонив мені: каже, що говорив не для запису. Це порушення, і ми ще про це поговоримо.`);
+    if (has(s,'artem')) L.push(`Позиція Артема робить тему грошей людською, а не скандальною.`);
+    if (has(s,'c2_report')) L.push(`Цифри зі звіту знімають половину питань про «мільйони». Добре.`);
+    if (has(s,'kids')) L.push(`Голоси підлітків показують, навіщо все це.`);
+    if (s.flags.rumorPub) L.push(`Ти поставив чутку про родинні зв'язки, нічого не перевіривши? Я її зняла. Посилання на депутата не робить неправду правдою.`);
+    if (s.flags.rumorDebunk) L.push(`Перевірка чутки — сильний хід. Ти відповів на питання, яке ставлять у коментарях.`);
+    if (L.length < 2) L.push(`Тонкувато. Матеріалу мало, але здаємо.`);
+    return L.map(t=>['irina',t]);
+  },
+  choices: [ {text:`Опублікувати`, to:`c2_reaction`, primary:true} ]
+},
+c2_reaction: {
+  ch:2, loc:'phone', place:`Телеграм-канал «Ліскова.Медіа»`, when:`П'ятниця, 18:00`,
+  html: s => post(headline2(s), 980 + s.bal*150),
+  chat: s => {
+    const c = [];
+    if (has(s,'c2_procedure')) c.push(['r:Ольга',`Не знала, що там усе вирішують збори. Думала, «голова сказала».`]);
+    if (has(s,'c2_report')) c.push(['r:Тарас',`18 тисяч за пів року? Я думав, там мільйони.`]);
+    if (has(s,'danylo_anon')||has(s,'artem')) c.push(['r:Анонім',`Про вигорання дуже знайомо. Ми так само розвалилися у 2023-му.`]);
+    if (s.flags.h2==='quarrel') c.push(['r:Олег К.',`Я ж казав, що вони пересваряться 😂`]);
+    if (c.length===0) c.push(['r:Андрій',`Ну, вечір як вечір. А що далі?`]);
+    c.push(['sys',`Через тиждень`]);
+    c.push(['solo',`Нам відмовили у гранті. Половина команди каже, що треба закриватися.`]);
+    return c;
+  },
+  choices: [ {text:`До розділу 3`, to:`c3_intro`, primary:true} ]
+},
+
+/* ================= РОЗДІЛ 3 ================= */
+c3_intro: {
+  ch:3, loc:'newsroom', place:`Редакція «Ліскова.Медіа»`, when:`Понеділок, 09:30`,
+  kicker:`Розділ 3 з 4 · Аналітика`,
+  chat: [
+    ['irina',`«Перехрестю» відмовив фонд. Тільки не пиши «бідних дітей скривдили».`],
+    ['irina',`Розберися, звідки ГО беруть гроші, як працює оцінювання і що конкретно було не так у заявці. Нехай текст допоможе й іншим.`]
+  ],
+  onEnter: s => { s.time = 6; },
+  choices: [ {text:`Скласти план`, to:`c3_hub`, primary:true} ]
+},
+c3_hub: {
+  ch:3, hub:true, loc:'newsroom', place:`Ваш стіл у редакції`, when:`До дедлайну 6 годин`,
+  choices: [
+    {text:`Поговорити із Соломією після відмови`, cost:1, to:`c3_solo`, once:`c3_solo`},
+    {text:`Відеодзвінок із фондом «Обрій»`, cost:2, to:`c3_fund`, once:`c3_fund`},
+    {text:`Самому розібрати заявку`, cost:1, to:`c3_markup`, once:`c3_markup`},
+    {text:`Показати заявку незалежному експертові`, cost:1, to:`c3_expert`, once:`c3_expert`},
+    {text:`Лист без підпису на пошті редакції`, cost:1, to:`c3_leak`, once:`c3_leak`},
+    {text:`ГО з сусідньої громади, яка отримала грант`, cost:1, to:`c3_other`, once:`c3_other`},
+    {text:`Сідаю писати`, to:`c3_coi`, primary:true, cond: s => s.done.some(d=>d.startsWith('c3_'))}
+  ]
+},
+c3_solo: {
+  ch:3, loc:'space', place:`Колишня бібліотека на Шевченка`, when:`Понеділок, 12:00`,
+  chat: s => [
+    ['sys',`Порожні стелажі, свіжа фарба на одній стіні`],
+    ['solo',`Ми фарбували цю стіну, коли подавали заявку. Думали, що відкриємо тут простір уже влітку.`],
+    ['solo',`Може, ми просто не вміємо. Половина каже закриватися.`],
+    ...(s.trust>=1 ? [['solo',`Можу дати тобі заявку і лист від фонду. Тобі я довіряю.`]] : [['solo',`Заявку не дам, вибач. Після минулих текстів команда проти.`]])
+  ],
+  onEnter: s => { addNote(s,'c3_mood'); if (s.trust>=1) s.flags.gotApp=true; },
+  choices: [ {text:`Повернутися до плану`, to:`c3_hub`, primary:true} ]
+},
+c3_fund: {
+  ch:3, loc:'call', place:`Відеодзвінок`, when:`Понеділок, 15:00`,
+  chat: [
+    ['marta',`Грант — лише одне з джерел. Організація, яка живе тільки з грантів, закривається після першої відмови.`],
+    ['marta',`Є членські внески, пожертви, краудфандинг, бюджетні конкурси для громадських організацій на рівні громади чи держави, соціальне підприємництво.`],
+    ['marta',`Ми не оцінюємо «хороших людей». Ми оцінюємо, чи зрозуміло, яку проблему ви розв'язуєте, для кого, як ми побачимо результат і чи відповідає кожна гривня конкретній дії.`],
+    ['marta',`І відмова не є вироком. Більшість тих, хто зрештою отримує фінансування, мали відмови раніше.`]
+  ],
+  onEnter: s => { addNote(s,'c3_sources'); s.acc++; s.bal++; },
+  choices: [ {text:`Повернутися до плану`, to:`c3_hub`, primary:true} ]
+},
+c3_markup: {
+  ch:3, loc:'newsroom', place:`Ваш стіл у редакції`, when:`Розбір заявки`,
+  markup: {
+    intro: s => s.flags.gotApp ? `Соломія надіслала заявку. Торкніться рядків, які, на вашу думку, могли стати причиною відмови, і натисніть «Готово».` : `Заявку вам не дали, але її короткий опис опубліковано в результатах конкурсу. Торкніться рядків, які могли стати причиною відмови, і натисніть «Готово».`,
+    lines: [
+      {t:`Проблема: молоді громади ввечері нема куди піти; 2 з 3 опитаних підлітків проводять вечори в ТЦ.`, bad:false},
+      {t:`Мета: провести молодіжний фестиваль «Перехрестя Фест».`, bad:true},
+      {t:`Цільова аудиторія: вся молодь громади.`, bad:true},
+      {t:`Партнери: школа №3, молодіжна рада громади.`, bad:false},
+      {t:`Результат: молодь стане активнішою.`, bad:true},
+      {t:`Кошторис: харчування учасників — 41% бюджету.`, bad:true}
+    ]
+  },
+  next: `c3_hub`
+},
+c3_expert: {
+  ch:3, loc:'cafe', place:`Кав'ярня біля університету`, when:`Вівторок, 10:00`,
+  chat: [
+    ['yurii',`Тут класичні помилки. Мета сформульована як захід: фестиваль — інструмент, а мета описує зміну, якої ви хочете досягти.`],
+    ['yurii',`«Вся молодь» не є цільовою аудиторією. Скільки людей, якого віку, звідки?`],
+    ['yurii',`«Молодь стане активнішою» неможливо виміряти. А 41% на харчування, не пов'язане з жодним результатом, експерт бачить за секунду.`],
+    ['yurii',`При цьому проблема описана добре, з цифрами, і партнери сильні. Заявку можна врятувати за вечір.`]
+  ],
+  onEnter: s => { addNote(s,'c3_errors'); s.acc++; },
+  choices: [ {text:`Повернутися до плану`, to:`c3_hub`, primary:true} ]
+},
+c3_leak: {
+  ch:3, loc:'newsroom', place:`Пошта редакції`, when:`Вівторок, 22:47`,
+  chat: [
+    ['sys',`Новий лист. Відправник: без імені`],
+    ['doc',`Тема: результати конкурсу «Обрію»
+Я член комісії. Ось таблиця: усі заявки,
+бали кожного експерта, їхні імена.
+Ви побачите, що «Перехрестя» засудили
+несправедливо.
+[вкладення: rezultaty_final.xlsx]`]
+  ],
+  choices: [
+    {text:`Перевірити автентичність і взяти лише знеособлені дані`, to:`c3_leak2`, effect: s => { addNote(s,'leak_anon'); s.acc++; s.ind++; }},
+    {text:`Готувати публікацію всієї таблиці: суспільний інтерес`, to:`c3_hub`, effect: s => { addNote(s,'leak_full'); s.ind-=2; }},
+    {text:`Не відкривати вкладення і видалити лист`, to:`c3_hub`}
+  ]
+},
+c3_leak2: {
+  ch:3, loc:'call', place:`Дзвінок у фонд`, when:`Середа, 11:00`,
+  chat: [
+    ['marta',`Так, таблиця справжня. Ми розберемося, як вона потрапила назовні.`],
+    ['marta',`Прохідний бал був 70 зі 100. «Перехрестя» отримало 61. Несправедливості тут немає, є слабка логіка заявки.`],
+    ['sys',`Анонім помилявся щодо «несправедливості», але дав вам точну цифру`]
+  ],
+  choices: [ {text:`Повернутися до плану`, to:`c3_hub`, primary:true} ]
+},
+c3_other: {
+  ch:3, loc:'call', place:`Відеодзвінок`, when:`Середа, 14:00`,
+  chat: [
+    ['olena',`Ми отримали грант із третьої спроби. Перші дві заявки були про те, які ми хороші.`],
+    ['olena',`Потім ми перестали писати, які ми хороші, і почали писати, що зміниться і як це порахувати.`],
+    ['olena',`Порада «Перехрестю»: не закривайтеся. Попросіть у фонду коментар до оцінки, це нормальна практика.`]
+  ],
+  onEnter: s => { addNote(s,'other'); s.bal++; },
+  choices: [ {text:`Повернутися до плану`, to:`c3_hub`, primary:true} ]
+},
+c3_coi: {
+  ch:3, loc:'newsroom', place:`Ваш стіл у редакції`, when:`Четвер, 09:00`,
+  chat: [
+    ['sys',`Ви перечитуєте кошторис і помічаєте підпис автора: Артем Лисенко`],
+    ['sys',`Ви вчилися з Артемом в одній групі два роки. Редакторка про це не знає`]
+  ],
+  choices: [
+    {text:`Сказати редакторці й розкрити це в тексті`, to:`c3_write`, effect: s => { s.ind++; s.flags.coi='open'; }},
+    {text:`Нічого не казати: ви ж не друзі`, to:`c3_write`, effect: s => { s.ind--; s.flags.coi='hidden'; }},
+    {text:`Пом'якшити розбір кошторису, щоб не підставляти Артема`, to:`c3_write`, effect: s => { s.ind-=2; s.acc--; s.flags.coi='soft'; }}
+  ]
+},
+c3_write: {
+  ch:3, loc:'newsroom', place:`Ваш стіл у редакції`, when:`Четвер, 10:30`,
+  html: s => `<h2>Заголовок аналітики</h2>`,
+  choices: [
+    {text:`«Три помилки, через які фонди відмовляють молодіжним ГО»`, to:`c3_review`, cond: s=>has(s,'c3_errors')||s.flags.markHit>=3, effect: s => { s.flags.h3='errors'; s.acc++; }},
+    {text:`«Фонд відмовив молоді. Що далі?»`, to:`c3_review`, effect: s => { s.flags.h3='next'; }},
+    {text:`«Конкурс із сюрпризом: що приховує комісія»`, to:`c3_review`, cond: s=>has(s,'leak_full'), effect: s => { s.flags.h3='leak'; s.acc--; }}
+  ]
+},
+c3_review: {
+  ch:3, loc:'newsroom', place:`Стіл редакторки`, when:`Четвер, 12:00`,
+  chat: s => {
+    const L = [];
+    if (has(s,'c3_sources')) L.push(`Блок про джерела фінансування корисний для всіх ГО, а не лише для «Перехрестя».`);
+    if (has(s,'c3_errors')) L.push(`Розбір експерта конкретний і зрозумілий. Саме це читачі збережуть собі.`);
+    if (s.flags.markHit!==undefined && !has(s,'c3_errors')) L.push(s.flags.markHit>=3 && !s.flags.markMiss ? `Твій власний розбір заявки влучний, але без експерта звучить як думка стажера.` : `Твій розбір заявки слабкий: частину помилок пропущено або знайдено там, де їх немає. Без експерта я б цього не ставила.`);
+    if (has(s,'leak_anon')) L.push(`Цифра «61 зі 100 при прохідних 70» закриває тему «несправедливого конкурсу». І ти нікого не підставив.`);
+    if (has(s,'leak_full')) L.push(`Публікувати таблицю з іменами експертів і чужими заявками, не перевіривши її? Ні. Я це знімаю.`);
+    if (has(s,'other')) L.push(`Приклад «Мамин клуб» показує, що відмова не кінець.`);
+    if (s.flags.coi==='open') L.push(`Дякую, що сказав про Артема. Я додала примітку, і це робить текст сильнішим.`);
+    if (s.flags.coi==='hidden') L.push(`Чому ти не сказав, що вчився з Артемом? Мені щойно про це написав читач. Тепер доведеться пояснюватися.`);
+    if (s.flags.coi==='soft') L.push(`Чому розбір кошторису такий м'який? Ти вчився з автором? Ось так конфлікт інтересів і шкодить тексту.`);
+    if (L.length < 2) L.push(`Матеріалу замало для аналітики. Наступного разу плануй час краще.`);
+    return L.map(t=>['irina',t]);
+  },
+  choices: [ {text:`Опублікувати`, to:`c3_reaction`, primary:true} ]
+},
+c3_reaction: {
+  ch:3, loc:'phone', place:`Телеграм-канал «Ліскова.Медіа»`, when:`Четвер, 18:00`,
+  html: s => post(headline3(s), 1600 + s.acc*90),
+  chat: s => {
+    const c = [];
+    if (s.flags.h3==='errors') c.push(['r:Ірина, ГО «Мамин клуб»',`Зберегла собі. Ми якраз пишемо першу заявку, і в нас мета «провести тренінг»...`]);
+    c.push(['r:Андрій',`Нарешті хтось пояснив, на що дають гроші.`]);
+    if (has(s,'leak_full')) c.push(['r:Анонім',`А таблицю де взяли? Злили? Цікаво, що ще ви публікуєте без перевірки.`]);
+    c.push(['sys',`Через місяць`]);
+    c.push(['solo',`Ми переписали заявку і подали на конкурс громадських ініціатив міської ради. Нас підтримали! 🎉`]);
+    c.push(['irina',`Це гроші громади. Тепер стежиш за проєктом від договору до звіту.`]);
+    return c;
+  },
+  choices: [ {text:`До розділу 4`, to:`c4_intro`, primary:true} ]
+},
+
+/* ================= РОЗДІЛ 4 ================= */
+c4_intro: {
+  ch:4, loc:'newsroom', place:`Редакція «Ліскова.Медіа»`, when:`Травень`,
+  kicker:`Розділ 4 з 4 · Репортаж-спостереження`,
+  chat: [
+    ['irina',`Проєкт «Перехрестя» розрахований на 100 днів: відкрити простір у колишній бібліотеці і провести там 8 заходів, зокрема фестиваль.`],
+    ['irina',`Читачі мають право знати, як витрачають їхні гроші. Без реклами і без полювання на відьом.`],
+    ['sys',`За 100 днів проєкту ви маєте 6 годин робочого часу на цю тему`]
+  ],
+  onEnter: s => { s.time = 6; },
+  choices: [ {text:`Скласти план`, to:`c4_hub`, primary:true} ]
+},
+c4_hub: {
+  ch:4, hub:true, loc:'newsroom', place:`Ваш стіл у редакції`, when:`100 днів проєкту`,
+  choices: [
+    {text:`День 1: підписання договору і пресконференція`, cost:1, to:`c4_contract`, once:`c4_contract`},
+    {text:`Розмова з фахівчинею з молодіжної політики громади`, cost:1, to:`c4_oksana`, once:`c4_oksana`},
+    {text:`День 47: щось пішло не так`, cost:2, to:`c4_delay`, once:`c4_delay`},
+    {text:`Підрядник, який зірвав строки`, cost:1, to:`c4_vasyl`, once:`c4_vasyl`, cond: s=>has(s,'delay')},
+    {text:`День 80: фестиваль`, cost:2, to:`c4_trip`, once:`c4_trip`},
+    {text:`День 100: звіт`, cost:1, to:`c4_report`, once:`c4_report`},
+    {text:`Сідаю писати`, to:`c4_write`, primary:true, cond: s => s.done.some(d=>d.startsWith('c4_'))}
+  ]
+},
+c4_contract: {
+  ch:4, loc:'office', place:`Зала засідань міськради`, when:`День 1`,
+  chat: [
+    ['sys',`Договір: календарний план, відповідальні, кошторис за статтями, звітність. Змінювати статті можна лише за погодженням`],
+    ['solo',`Наш проєкт фестиваль стане головною подією літа!`],
+    ['secr',`Це частина програми міської ради для молоді, яку ми послідовно реалізуємо.`],
+    ['sys',`Хто що реалізує, з цих слів незрозуміло`]
+  ],
+  onEnter: s => { addNote(s,'c4_contract'); },
+  choices: [ {text:`Повернутися до плану`, to:`c4_hub`, primary:true} ]
+},
+c4_oksana: {
+  ch:4, loc:'office', place:`Відділ молоді та спорту`, when:`День 3`,
+  chat: [
+    ['oksana',`Давайте розрізняти.`],
+    ['oksana',`Програма — довгостроковий документ громади з багатьма напрямами. Під неї проводять конкурс.`],
+    ['oksana',`Проєкт — обмежена в часі робота з метою, ресурсами і результатом. Ось як у «Перехрестя»: 100 днів, простір і 8 заходів.`],
+    ['oksana',`А фестиваль — один із заходів цього проєкту. ГО звітує за весь проєкт, а громада — за програму.`]
+  ],
+  onEnter: s => { addNote(s,'c4_terms'); s.acc++; },
+  choices: [ {text:`Повернутися до плану`, to:`c4_hub`, primary:true} ]
+},
+c4_delay: {
+  ch:4, loc:'space', place:`Колишня бібліотека на Шевченка`, when:`День 47`,
+  chat: [
+    ['sys',`Замість меблів порожня зала`],
+    ['artem',`Підрядник не привіз меблі. Відкриття переноситься на три тижні.`],
+    ['artem',`Будь ласка, не пиши поки. Ми все виправимо, а «зрив» у заголовку нас доб'є.`]
+  ],
+  onEnter: s => addNote(s,'delay'),
+  choices: [
+    {text:`«Напишу, але з вашим поясненням і планом дій»`, to:`c4_hub`, effect: s => { s.flags.delay='fair'; s.bal++; }},
+    {text:`«Добре, почекаю, поки виправите»`, to:`c4_hub`, effect: s => { s.flags.delay='wait'; s.ind--; }},
+    {text:`Написати новину про зрив одразу, без коментаря ГО`, to:`c4_hub`, effect: s => { s.flags.delay='raw'; s.bal--; }}
+  ]
+},
+c4_vasyl: {
+  ch:4, loc:'phone', place:`Телефонна розмова`, when:`День 49`,
+  chat: [
+    ['vasyl',`Майстерня стояла десять днів через відключення світла. Генератор верстати не тягне.`],
+    ['vasyl',`Лист про затримку я надіслав ГО одразу. Меблі будуть до кінця місяця.`]
+  ],
+  onEnter: s => { addNote(s,'vasyl'); s.bal++; },
+  choices: [ {text:`Повернутися до плану`, to:`c4_hub`, primary:true} ]
+},
+c4_trip: {
+  ch:4, loc:'phone', place:`Месенджер`, when:`День 78`,
+  chat: [
+    ['solo',`Приїжджай на фестиваль! Він буде на набережній у сусідньому селищі.`],
+    ['solo',`Ми оплатимо тобі дорогу і ночівлю, у нас є стаття «інформаційний супровід» 🙂`]
+  ],
+  choices: [
+    {text:`«Дякую, але дорогу оплатить редакція»`, to:`c4_fest`, effect: s => { s.ind++; }},
+    {text:`«Супер, дякую!»`, to:`c4_fest`, effect: s => { s.ind-=2; s.flags.paidTrip=true; }}
+  ]
+},
+c4_fest: {
+  ch:4, loc:'festival', place:`Фестиваль на набережній`, when:`День 80`,
+  chat: [
+    ['sys',`Близько 90 людей, черга на майстер-клас із подкастингу`],
+    ['girl2',`Я веду тут кіноклуб! Пам'ятаєте, я вперше прийшла на кіновечір?`],
+    ['kid',`Я думав, буде нудно. А тут роблять подкаст, і мене взяли в команду.`],
+    ['solo',`Ми втомилися, але це того варте.`]
+  ],
+  onEnter: s => { addNote(s,'fest'); s.bal++; },
+  choices: [ {text:`Повернутися до плану`, to:`c4_hub`, primary:true} ]
+},
+c4_report: {
+  ch:4, loc:'space', place:`Молодіжний простір «Перехрестя»`, when:`День 100`,
+  chat: [
+    ['doc',`ЗВІТ ПРО ВИКОНАННЯ ПРОЄКТУ (фрагмент)
+Заходів:    заплановано 8,   проведено 6
+Учасників:  заплановано 200, фактично 140
+Простір:    відкрито із затримкою 3 тижні
+Скасовано 2 заходи через повітряні тривоги,
+раду повідомлено листами 12.06 і 03.07`],
+    ['solo',`Простір працює й далі вже без грантових коштів: щочетверга кіноклуб, у суботу англійська, яку ведуть волонтери.`]
+  ],
+  onEnter: s => { addNote(s,'c4_result'); s.acc++; },
+  choices: [ {text:`Повернутися до плану`, to:`c4_hub`, primary:true} ]
+},
+c4_write: {
+  ch:4, loc:'newsroom', place:`Ваш стіл у редакції`, when:`День 101`,
+  html: s => `<h2>Термінологія</h2><p>У тексті треба назвати фестиваль. Як?</p>`,
+  choices: [
+    {text:`Програма міської ради`, to:`c4_write2`, effect: s => { s.flags.term='program'; s.acc--; }},
+    {text:`Проєкт «Перехрестя»`, to:`c4_write2`, effect: s => { s.flags.term='project'; s.acc--; }},
+    {text:`Захід у межах проєкту «Перехрестя»`, to:`c4_write2`, effect: s => { s.flags.term='event'; s.acc++; }}
+  ]
+},
+c4_write2: {
+  ch:4, loc:'newsroom', place:`Ваш стіл у редакції`, when:`День 101`,
+  html: s => `<h2>Заголовок підсумкового матеріалу</h2>`,
+  choices: [
+    {text:`«Сто днів: 6 заходів із 8 і простір, який працює далі»`, to:`c4_review`, cond: s=>has(s,'c4_result'), effect: s => { s.flags.h4='fair'; s.acc++; s.bal++; }},
+    {text:`«Гроші громади на вітер?»`, to:`c4_review`, effect: s => { s.flags.h4='fail'; s.bal-=2; if(!has(s,'c4_result')) s.acc--; }},
+    {text:`«Свято, яке подарувала молодь»`, to:`c4_review`, effect: s => { s.flags.h4='promo'; s.ind--; }},
+    {text:`«Як молодіжна ГО прожила свій перший проєкт»`, to:`c4_review`, effect: s => { s.flags.h4='neutral'; }}
+  ]
+},
+c4_review: {
+  ch:4, loc:'newsroom', place:`Стіл редакторки`, when:`День 102`,
+  chat: s => {
+    const L = [];
+    if (s.flags.term==='event') L.push(`Термінологія точна: читач розуміє, хто за що звітує.`);
+    else L.push(`Фестиваль — це захід у межах проєкту, а не ${s.flags.term==='program'?'програма':'проєкт'}. Виправила.`);
+    if (s.flags.delay==='fair') L.push(`Новина про затримку з поясненням ГО вийшла чесною. Ніхто не скаржився.`);
+    if (s.flags.delay==='wait') L.push(`Ти три тижні мовчав про зрив строків на прохання героїв? Про це написали конкуренти, а не ми.`);
+    if (s.flags.delay==='raw') L.push(`Новина про зрив без коментаря ГО вийшла однобокою. Довелося робити оновлення.`);
+    if (has(s,'vasyl')) L.push(`Позиція підрядника пояснює, що сталося, без пошуку винних.`);
+    if (s.flags.paidTrip) L.push(`Стоп. Твою поїздку оплатила ГО з грантових коштів? Тоді весь репортаж — прихована реклама. Ми додаємо примітку, і це удар по репутації.`);
+    if (has(s,'fest')) L.push(`Сцени з фестивалю живі: видно людей, а не лише цифри.`);
+    if (has(s,'c4_result')) L.push(`Порівняння «план — факт» з причинами — те, чого зазвичай бракує в таких текстах.`);
+    if (s.flags.h4==='fail') L.push(`«Гроші на вітер»? 6 заходів із 8 і простір, що працює далі, — це не вітер. Заголовок маніпулятивний.`);
+    if (s.flags.h4==='promo') L.push(`«Свято, яке подарувала молодь» — так пишуть у пресрелізах.`);
+    return L.map(t=>['irina',t]);
+  },
+  choices: [ {text:`Опублікувати`, to:`c4_reaction`, primary:true} ]
+},
+c4_reaction: {
+  ch:4, loc:'phone', place:`Телеграм-канал «Ліскова.Медіа»`, when:`День 102, 18:00`,
+  html: s => post(headline4(s), 1400 + s.bal*120),
+  chat: s => {
+    const c = [];
+    if (s.flags.h4==='fail') { c.push(['r:Олег К.',`Я ж казав!`]); c.push(['r:Аліна',`Ви були в просторі хоч раз? Я там веду кіноклуб.`]); }
+    else c.push(['r:Тарас',`Чесно: не вірив, що з цього щось вийде. Зайду в четвер на кіно.`]);
+    if (s.flags.paidTrip) c.push(['r:Андрій',`«Поїздку оплатила ГО». Ну все ясно з вашою журналістикою.`]);
+    c.push(['r:Ірина, ГО «Мамин клуб»',`Ми теж подаємося на наступний конкурс. Дякуємо за серію.`]);
+    return c;
+  },
+  choices: [ {text:`Підсумок серії`, to:`final`, primary:true} ]
+},
+
+/* ================= ФІНАЛ ================= */
+final: {
+  ch:5, loc:'newsroom', place:`Редакція «Ліскова.Медіа»`, when:`Через рік`,
+  html: s => {
+    const e = ending(s);
+    return `<div class="kicker">Фінал</div><h2>${e.title}</h2>
+      <div class="chat">${bubble('irina', e.editor)}</div>
+      <p style="margin-top:14px"><b>Через рік.</b> ${e.epilogue}</p>
+      <div class="stats">
+        <div class="stat"><b>${fmt(s.acc)}</b><span>Точність</span></div>
+        <div class="stat"><b>${fmt(s.bal)}</b><span>Баланс</span></div>
+        <div class="stat"><b>${fmt(s.trust)}</b><span>Довіра джерел</span></div>
+        <div class="stat"><b>${fmt(s.ind)}</b><span>Незалежність</span></div>
+      </div>`;
+  },
+  choices: [ {text:`Що в цій історії правда`, to:`truth`, primary:true} ]
+},
+truth: {
+  ch:5,
+  html: s => `
+    <h2>Що в цій історії правда</h2>
+    <p>Громада, видання і «Перехрестя» вигадані. Правила, за якими вони жили, реальні.</p>
+    <h3>Закони</h3>
+    <ul>
+      <li><a href="https://zakon.rada.gov.ua/laws/show/4572-17" target="_blank" rel="noopener">Закон «Про громадські об'єднання»</a>: що таке ГО, хто може бути засновником, статут, права.</li>
+      <li><a href="https://zakon.rada.gov.ua/laws/show/755-15" target="_blank" rel="noopener">Закон «Про державну реєстрацію юридичних осіб, фізичних осіб – підприємців та громадських формувань»</a>: як зареєструвати ГО.</li>
+      <li><a href="https://zakon.rada.gov.ua/laws/show/1414-20" target="_blank" rel="noopener">Закон «Про основні засади молодіжної політики»</a>: молодіжні громадські об'єднання, молодіжні центри й ради, фінансова підтримка.</li>
+      <li><a href="https://zakon.rada.gov.ua/laws/show/1049-2011-%D0%BF" target="_blank" rel="noopener">Постанова КМУ № 1049</a>: конкурси з бюджетною підтримкою для громадських організацій.</li>
+      <li><a href="https://zakon.rada.gov.ua/laws/show/3236-17" target="_blank" rel="noopener">Закон «Про волонтерську діяльність»</a>.</li>
+      <li><a href="https://zakon.rada.gov.ua/laws/show/2849-20" target="_blank" rel="noopener">Закон «Про медіа»</a> та Кодекс етики українського журналіста: прихована реклама, анонімні джерела, конфлікт інтересів.</li>
+    </ul>
+    <h3>Реальні кейси з гри</h3>
+    <ul>
+      <li><a href="https://suspilne.media/chernivtsi/270572-akou-e-molodizna-politika-v-cernivcah-intervu-zi-spivzasnovnikom-go-centr-molodi-cernivciv/" target="_blank" rel="noopener">ГО «Центр молоді Чернівців»</a>, Суспільне Чернівці</li>
+      <li><a href="https://thegard.city/articles/472499/anna-chumak-molodizhna-rada-pervomajsk" target="_blank" rel="noopener">Молодіжна рада Первомайська</a>, Гард.City</li>
+      <li><a href="https://texty.org.ua/fragments/100434/molodizhni-orhanizaciyi-vymahayut-zaluchaty-yih-do-molodizhnoyi-polityky/" target="_blank" rel="noopener">Заява НУМО</a>, Тексти; <a href="https://www.ukrinform.ua/rubric-polytics/3236153-rada-uhvalila-zakon-pro-molodiznu-politiku.html" target="_blank" rel="noopener">ухвалення закону</a>, Укрінформ</li>
+    </ul>
+    <h3>Якщо у вас є ідея</h3>
+    <p>Почніть із молодіжного центру або молодіжної ради вашої громади: там підкажуть, як створити ГО, де шукати партнерів і які конкурси відкриті зараз.</p>
+    <div class="disclaimer">Автор: Денис Вакулко, студент ОП «Журналістика» УжНУ. Медіапроєкт, ${new Date().getFullYear()}.${SYLA_MRIY.show ? ` Автор очолює ГО «Сила мрій», історія якої наведена в архіві редакції.` : ``}<br>Персонажі та їхні портрети вигадані; репліки є реконструкціями типових ситуацій. Реальні цитати наведено з посиланнями на першоджерела.</div>`,
+  choices: [ {text:`Зіграти ще раз`, to:`restart`, primary:true} ]
+}
+};
+
+/* Заголовки опублікованих матеріалів */
+function headline1(s){ return {explain:`Як група друзів стає громадською організацією і що це змінює`, sensation:`Молодь заснувала ГО. Заради чого?`, promo:`Звідки береться громадська організація: історія «Перехрестя»`}[s.flags.h1] || `Хто такі «Перехрестя»`; }
+function headline2(s){ return {inside:`Хто вирішує в ГО і чому люди звідти йдуть`, quarrel:`Сварка в «Перехресті»: команда на межі розколу`, burnout:`Скільки коштує безоплатна робота`, evening:`Один вечір у «Перехресті»`}[s.flags.h2] || `Один вечір у «Перехресті»`; }
+function headline3(s){ return {errors:`Три помилки, через які фонди відмовляють молодіжним ГО`, next:`Фонд відмовив молоді. Що далі?`, leak:`Конкурс із сюрпризом: що приховує комісія`}[s.flags.h3] || `Фонд відмовив молоді. Що далі?`; }
+function headline4(s){ return {fair:`Сто днів: 6 заходів із 8 і простір, який працює далі`, fail:`Гроші громади на вітер?`, promo:`Свято, яке подарувала молодь`, neutral:`Як молодіжна ГО прожила свій перший проєкт`}[s.flags.h4] || `Як молодіжна ГО прожила свій перший проєкт`; }
+
+/* Фінали: умови перевіряються згори донизу. */
+function ending(s){
+  if (s.ind <= -2 || s.trust <= -2) return {
+    title:`Серію знято`,
+    editor:`Я не можу тримати на сайті серію, у якій героїня правила текст, поїздку оплатили герої, а джерела кажуть, що їх записували потай. Ми знімаємо матеріали і пишемо пояснення читачам.`,
+    epilogue:`Джерела в громаді перестали говорити з «Ліскова.Медіа». «Перехрестя» працює, але про нього тепер пишуть лише в їхньому власному телеграм-каналі.` };
+  if (s.acc <= 2) return {
+    title:`Гучно, але з помилками`,
+    editor:`Перегляди хороші. Але нам довелося публікувати виправлення. Гучність без точності в нашій професії швидко закінчується.`,
+    epilogue:`Чутки про «Перехрестя» досі ходять містом. Організація втратила одного партнера, хоча нічого не порушила.` };
+  if (s.bal <= 2) return {
+    title:`Точно, але в один бік`,
+    editor:`Факти захищені, до них не причепишся. Але скептиків і самих героїв у тексті чути погано, і половина міста вирішила, що серія замовна.`,
+    epilogue:`«Перехрестя» працює, а суперечки в коментарях так і не вщухли: кожна сторона читає в серії своє.` };
+  if (s.acc >= 9 && s.bal >= 6 && s.ind >= 1 && s.trust >= 1) return {
+    title:`Серія, яку цитують`,
+    editor:`Це найкраща робота стажера за останні роки. Подаємо серію на регіональний конкурс журналістських робіт. І так, ти в штаті.`,
+    epilogue:`Простір у колишній бібліотеці відкрито щодня. Дві інші ініціативи з громади зареєстрували власні ГО і посилаються на ваш розбір заявки, коли пишуть свої.` };
+  return {
+    title:`Чесна робота`,
+    editor:`Солідна серія. Є місця, де можна було копнути глибше, але читач отримав факти й різні погляди. Беру тебе в штат.`,
+    epilogue:`«Перехрестя» подає вже другу заявку до фонду «Обрій». Цього разу з першої спроби.` };
+}
+
+/* =====================================================================
+   МАЛЮНКИ: аватари і сцени. Правити не обов'язково.
+   ===================================================================== */
+function face(a){
+  const hair = a.hair, sk = a.skin;
+  let back='', front='';
+  const cap = `<path d="M19 28 C17 11 47 11 45 28 C43 20 38 17 32 17 C26 17 21 20 19 28Z" fill="${hair}"/>`;
+  if (a.style==='long') { back = `<path d="M17 27 C16 9 48 9 47 27 L49 52 L15 52Z" fill="${hair}"/>`; front = cap; }
+  if (a.style==='short') front = cap;
+  if (a.style==='bun') front = cap + `<circle cx="32" cy="11" r="6" fill="${hair}"/>`;
+  if (a.style==='bob') { back = `<path d="M17 27 C16 9 48 9 47 27 L47 41 L17 41Z" fill="${hair}"/>`; front = `<path d="M19 27 C18 12 46 12 45 27 C40 22 30 22 19 27Z" fill="${hair}"/>`; }
+  if (a.style==='curly') front = [[21,21],[26,15],[32,13],[38,15],[43,21],[24,18],[40,18]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="${hair}"/>`).join('');
+  if (a.style==='bald') front = `<ellipse cx="20" cy="27" rx="2.6" ry="5" fill="${hair}"/><ellipse cx="44" cy="27" rx="2.6" ry="5" fill="${hair}"/>`;
+  const beard = a.beard ? `<path d="M20 30 C21 45 43 45 44 30 C40 39 24 39 20 30Z" fill="${hair}"/>` : '';
+  const must = a.mustache ? `<path d="M26.5 34.5 Q32 31 37.5 34.5 Q32 35.8 26.5 34.5Z" fill="${hair}"/>` : '';
+  const gl = a.glasses ? `<g fill="none" stroke="#2b2b2b" stroke-width="1.4"><circle cx="27" cy="28.5" r="4.3"/><circle cx="37" cy="28.5" r="4.3"/><path d="M31.3 28.5 H32.7"/></g>` : '';
+  return `<svg viewBox="0 0 64 64" aria-hidden="true" style="border-radius:50%;overflow:hidden">
+  <circle cx="32" cy="32" r="32" fill="${a.bg}"/>
+  ${back}<path d="M10 66 C10 49 20 45 32 45 C44 45 54 49 54 66Z" fill="${a.shirt}"/>
+  <rect x="28" y="37" width="8" height="9" rx="3" fill="${sk}"/>
+  <ellipse cx="32" cy="28" rx="12" ry="14" fill="${sk}"/>
+  ${front}${beard}
+  <circle cx="27" cy="28.5" r="1.6" fill="#2b2b2b"/><circle cx="37" cy="28.5" r="1.6" fill="#2b2b2b"/>
+  <path d="M28 35.5 Q32 38.5 36 35.5" fill="none" stroke="#7a3b2e" stroke-width="1.4" stroke-linecap="round"/>
+  ${must}${gl}</svg>`;
+}
+function readerAv(name){
+  const pal = ['#f2d7d0','#d8ecd9','#d6e2f3','#efe2c9','#e6e0f0','#f6dbe6'];
+  let h=0; for (const ch of name) h=(h*31+ch.charCodeAt(0))%997;
+  return `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="32" fill="${pal[h%pal.length]}"/><text x="32" y="41" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="700" font-size="26" fill="#3a352c">${name.trim()[0]}</text></svg>`;
+}
+function avatar(k){ return face(CAST[k].av); }
+
+function scenery(kind){
+  const W=680,H=220;
+  const sky = {newsroom:'#e9e1d4', cafe:'#f0dcc4', office:'#e3e7ea', market:'#cfe3f2', phone:'#2a2f3a', archive:'#e6dccb', classroom:'#e8efe0', call:'#dfe6f0', space:'#efe6da', festival:'#bfe0f5', street:'#d4e6f2'}[kind]||'#eee';
+  let g='';
+  if (kind==='newsroom') g = `<rect y="150" width="${W}" height="70" fill="#b89f80"/><rect x="40" y="30" width="170" height="90" rx="4" fill="#cfe0ea" stroke="#8f7a62" stroke-width="6"/><line x1="125" y1="30" x2="125" y2="120" stroke="#8f7a62" stroke-width="4"/><rect x="250" y="34" width="120" height="70" fill="#fff" stroke="#b9ad9c"/><text x="310" y="64" text-anchor="middle" font-family="system-ui" font-weight="800" font-size="14" fill="#b3261e">ЛІСКОВА</text><text x="310" y="84" text-anchor="middle" font-family="system-ui" font-size="12" fill="#555">медіа</text><rect x="300" y="128" width="300" height="16" rx="3" fill="#7a5f45"/><rect x="420" y="80" width="80" height="48" rx="3" fill="#2a2f3a"/><rect x="426" y="86" width="68" height="36" fill="#9fc3d9"/><rect x="452" y="128" width="16" height="6" fill="#2a2f3a"/><rect x="330" y="112" width="60" height="16" fill="#f4efe6" stroke="#ccc"/><path d="M560 128 v-26 h18 v26z" fill="#c96f53"/><path d="M556 102 h26" stroke="#7a5f45" stroke-width="3"/>`;
+  if (kind==='cafe') g = `<rect y="160" width="${W}" height="60" fill="#8a5a3c"/><rect x="0" y="0" width="${W}" height="18" fill="#6e4630"/>${[90,250,410,570].map(x=>`<line x1="${x}" y1="18" x2="${x}" y2="58" stroke="#333" stroke-width="2"/><path d="M${x-18} 58 h36 l-8 16 h-20z" fill="#e8b04b"/><circle cx="${x}" cy="80" r="7" fill="#ffe7a3" opacity=".8"/>`).join('')}<rect x="200" y="120" width="280" height="12" rx="4" fill="#5b3a29"/><rect x="330" y="132" width="20" height="40" fill="#5b3a29"/><path d="M290 106 h22 v14 h-22z" fill="#fff"/><path d="M380 106 h22 v14 h-22z" fill="#fff"/><path d="M297 100 q5 -8 0 -14 M387 100 q5 -8 0 -14" stroke="#bbb" fill="none"/><rect x="40" y="70" width="110" height="80" fill="#cfe0ea" stroke="#6e4630" stroke-width="6"/>`;
+  if (kind==='office') g = `<rect y="165" width="${W}" height="55" fill="#a9b3bb"/><rect x="40" y="26" width="600" height="26" fill="#c9d2d8"/><text x="340" y="44" text-anchor="middle" font-family="system-ui" font-weight="700" font-size="13" fill="#3c4a55">ЦЕНТР НАДАННЯ АДМІНІСТРАТИВНИХ ПОСЛУГ</text>${[90,250,410,570].map((x,i)=>`<rect x="${x-50}" y="78" width="100" height="72" rx="4" fill="#f6f8f9" stroke="#9aa6ae"/><text x="${x}" y="104" text-anchor="middle" font-family="system-ui" font-weight="800" font-size="18" fill="#2d5aa0">${i+1}</text><rect x="${x-30}" y="118" width="60" height="6" fill="#d6dde2"/><rect x="${x-30}" y="130" width="40" height="6" fill="#d6dde2"/>`).join('')}`;
+  if (kind==='market') g = `<rect y="170" width="${W}" height="50" fill="#b9b2a5"/>${[90,250,410,570].map((x,i)=>`<path d="M${x-70} 70 h140 l-10 25 h-120z" fill="${['#e07a5f','#3d9970','#e8b04b','#2d5aa0'][i]}"/><rect x="${x-60}" y="95" width="120" height="58" fill="#d8c3a5"/><rect x="${x-60}" y="150" width="120" height="20" fill="#8a6d3b"/>${[0,1,2].map(j=>`<circle cx="${x-35+j*35}" cy="140" r="9" fill="${['#c0392b','#f39c12','#27ae60'][(i+j)%3]}"/>`).join('')}`).join('')}<circle cx="620" cy="34" r="18" fill="#ffd56b"/>`;
+  if (kind==='phone') g = `<rect x="250" y="12" width="180" height="196" rx="22" fill="#11141a" stroke="#555" stroke-width="3"/><rect x="262" y="34" width="156" height="150" rx="6" fill="#1f2530"/><rect x="274" y="48" width="100" height="22" rx="10" fill="#3a4250"/><rect x="306" y="80" width="100" height="22" rx="10" fill="#e2574c"/><rect x="274" y="112" width="120" height="22" rx="10" fill="#3a4250"/><rect x="306" y="144" width="80" height="22" rx="10" fill="#e2574c"/><circle cx="340" cy="196" r="5" fill="#555"/>${[80,140,540,600].map((x,i)=>`<circle cx="${x}" cy="${50+i*40}" r="${3+i}" fill="#ffffff" opacity=".15"/>`).join('')}`;
+  if (kind==='archive') g = `<rect y="180" width="${W}" height="40" fill="#9c8466"/>${[0,1,2,3,4].map(i=>`<rect x="${30+i*130}" y="30" width="110" height="150" fill="#8a6d50"/>${[0,1,2,3].map(j=>`<rect x="${36+i*130}" y="${38+j*36}" width="98" height="28" fill="#f2e6cf"/>${[0,1,2,3,4,5].map(k=>`<rect x="${40+i*130+k*15}" y="${42+j*36}" width="11" height="22" fill="${['#b3261e','#2d5aa0','#3d9970','#e8b04b','#6b6b6b','#7b5ea7'][(i+j+k)%6]}"/>`).join('')}`).join('')}`).join('')}`;
+  if (kind==='classroom') g = `<rect y="175" width="${W}" height="45" fill="#b89f80"/><rect x="140" y="26" width="400" height="114" rx="4" fill="#2f5d3a" stroke="#8a6d3b" stroke-width="8"/><text x="170" y="66" font-family="Georgia,serif" font-size="18" fill="#e8f0e3">1. Звіт голови</text><text x="170" y="92" font-family="Georgia,serif" font-size="18" fill="#e8f0e3">2. План на літо</text><text x="170" y="118" font-family="Georgia,serif" font-size="18" fill="#e8f0e3">3. Питання грошей</text>${[60,200,340,480,620].map(x=>`<rect x="${x-40}" y="150" width="80" height="10" fill="#7a5f45"/><rect x="${x-34}" y="160" width="6" height="20" fill="#7a5f45"/><rect x="${x+28}" y="160" width="6" height="20" fill="#7a5f45"/>`).join('')}`;
+  if (kind==='call') g = `<rect x="120" y="20" width="440" height="160" rx="10" fill="#2a2f3a"/><rect x="132" y="32" width="200" height="136" rx="6" fill="#9fc3d9"/><rect x="346" y="32" width="200" height="136" rx="6" fill="#e6c9a8"/><circle cx="232" cy="90" r="26" fill="#eec1a0"/><path d="M190 168 q42 -50 84 0z" fill="#0f7c86"/><circle cx="446" cy="90" r="26" fill="#f1c7a5"/><path d="M404 168 q42 -50 84 0z" fill="#333"/><rect x="300" y="186" width="80" height="12" rx="6" fill="#2a2f3a"/><circle cx="340" cy="192" r="8" fill="#e2574c"/>`;
+  if (kind==='space') g = `<rect y="170" width="${W}" height="50" fill="#b89f80"/><rect x="0" y="0" width="230" height="170" fill="#f2c14e"/><text x="115" y="95" text-anchor="middle" font-family="system-ui" font-weight="800" font-size="22" fill="#fff">ПЕРЕХРЕСТЯ</text>${[300,420,540].map(x=>`<rect x="${x}" y="40" width="90" height="125" fill="#8a6d50"/>${[0,1,2].map(j=>`<rect x="${x+6}" y="${48+j*38}" width="78" height="4" fill="#5b4532"/>`).join('')}`).join('')}<rect x="250" y="40" width="30" height="80" fill="#cfe0ea" stroke="#8a6d50" stroke-width="4"/>`;
+  if (kind==='festival') g = `<rect y="160" width="${W}" height="60" fill="#7fbf6a"/><path d="M0 160 Q170 140 340 160 T680 160 V220 H0Z" fill="#6aab57"/><path d="M200 160 L340 60 L480 160Z" fill="#e2574c"/><rect x="290" y="110" width="100" height="50" fill="#fff3e0"/>${Array.from({length:12},(_,i)=>`<path d="M${30+i*55} 20 l12 20 l12 -20" fill="${['#e2574c','#f2c14e','#2d5aa0','#3d9970'][i%4]}"/>`).join('')}<line x1="20" y1="20" x2="670" y2="20" stroke="#555"/>${[60,110,520,580,630].map((x,i)=>`<circle cx="${x}" cy="150" r="9" fill="${['#f1c7a5','#c98e6a','#e0ac88','#f3cfb3','#a8714f'][i]}"/><rect x="${x-9}" y="159" width="18" height="24" rx="6" fill="${['#2d5aa0','#e07a5f','#3d9970','#7b5ea7','#e8b04b'][i]}"/>`).join('')}<circle cx="610" cy="56" r="20" fill="#ffd56b"/>`;
+  if (kind==='street') g = `<rect y="170" width="${W}" height="50" fill="#9aa0a6"/><rect y="165" width="${W}" height="8" fill="#c9cdd1"/>${[[20,70,'#e6c9a8'],[150,40,'#d6b3b3'],[290,60,'#c9d6c0'],[430,30,'#e3d3a8'],[560,55,'#c7c9de']].map(b=>`<rect x="${b[0]}" y="${b[1]}" width="110" height="${165-b[1]}" fill="${b[2]}"/>${[0,1,2].map(j=>[0,1].map(k=>`<rect x="${b[0]+18+k*46}" y="${b[1]+18+j*34}" width="26" height="20" fill="#f7f1e3"/>`).join('')).join('')}`).join('')}<circle cx="640" cy="28" r="16" fill="#ffd56b"/>`;
+  return `<svg viewBox="0 0 ${W} ${H}" aria-hidden="true"><rect width="${W}" height="${H}" fill="${sky}"/>${g}</svg>`;
+}
+
+/* =====================================================================
+   РУШІЙ ГРИ. Нижче код, який правити не потрібно.
+   ===================================================================== */
+const KEY = 'zdaty-v-nomer-v2';
+const fresh = () => ({ scene:'start', acc:0, bal:0, trust:0, ind:0, time:6, notes:[], done:[], flags:{}, seen:{} });
+let S = load() || fresh();
+let playToken = 0;
+const app = document.getElementById('app');
+const reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+function load(){ try { const r = localStorage.getItem(KEY); return r ? JSON.parse(r) : null; } catch(e){ return null; } }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+function has(s,k){ return s.notes.includes(k); }
+function addNote(s,k){ if(!s.notes.includes(k)){ s.notes.push(k); flashNotes(); } }
+function dropNote(s,k){ s.notes = s.notes.filter(x=>x!==k); }
+function fmt(n){ return (n>0?'+':'')+n; }
+function flashNotes(){ const b=document.getElementById('notesBtn'); b.classList.remove('flash'); void b.offsetWidth; b.classList.add('flash'); }
+
+function bubble(who, text, prev){
+  const cont = prev===who;
+  if (who==='me') return `<div class="msg me"><div class="bubble">${text}</div></div>`;
+  if (who==='sys') return `<div class="sys">${text}</div>`;
+  if (who==='doc') return `<div class="doc">${text}</div>`;
+  if (who.startsWith('r:')) { const n = who.slice(2); return `<div class="msg${cont?' cont':''}"><div class="av">${readerAv(n)}</div><div class="bubble">${cont?'':`<span class="who">${n} <em>· читач</em></span>`}${text}</div></div>`; }
+  const c = CAST[who];
+  return `<div class="msg${cont?' cont':''}"><div class="av">${face(c.av)}</div><div class="bubble">${cont?'':`<span class="who">${c.name}${c.role?` <em>· ${c.role}</em>`:''} <span class="tag">умовний персонаж</span></span>`}${text}</div></div>`;
+}
+function typingRow(who, prev){
+  if (who==='me' || who==='sys' || who==='doc') return '';
+  const cont = prev===who;
+  const av = who.startsWith('r:') ? readerAv(who.slice(2)) : face(CAST[who].av);
+  return `<div class="msg typing${cont?' cont':''}"><div class="av">${av}</div><div class="bubble"><span class="dots"><i></i><i></i><i></i></span></div></div>`;
+}
+function post(title, views){
+  return `<div class="post"><div class="ch">Ліскова.Медіа · канал</div><div class="hd">${title}</div><div class="re">👁 ${Math.max(300,views)} переглядів · коментарі нижче</div></div>`;
+}
+
+function go(id){
+  if (id==='restart'){ S = fresh(); save(); render(); window.scrollTo(0,0); return; }
+  S.scene = id;
+  const sc = SCENES[id];
+  if (sc && sc.onEnter && !S.seen[id]) sc.onEnter(S);
+  save(); render(); window.scrollTo(0,0);
+}
+
+function render(){
+  const token = ++playToken;
+  const sc = SCENES[S.scene];
+  document.getElementById('meta').textContent = CH[sc.ch] || '';
+  document.getElementById('nb').textContent = S.notes.length;
+  let h = `<div class="scene">`;
+  if (sc.loc) h += `<div class="loc">${scenery(sc.loc)}<div class="cap">${sc.place||''}${sc.when?`<small>${sc.when}</small>`:''}</div></div>`;
+  if (sc.kicker) h += `<div class="kicker">${sc.kicker}</div>`;
+  if (sc.hub) h += hubHead();
+  if (sc.html) h += (typeof sc.html==='function' ? sc.html(S) : sc.html);
+  h += `<div class="chat" id="chat"></div><div id="after"></div></div>`;
+  app.innerHTML = h;
+
+  if (sc.markup) return renderMarkup(sc);
+  const msgs = sc.chat ? (typeof sc.chat==='function' ? sc.chat(S) : sc.chat) : [];
+  const chat = document.getElementById('chat');
+  const finish = () => { if (token!==playToken) return; S.seen[S.scene]=true; save(); showChoices(sc); };
+  if (!msgs.length) return finish();
+  if (S.seen[S.scene] || reduce){ chat.innerHTML = msgs.map((m,j)=>bubble(m[0],m[1],j?msgs[j-1][0]:null)).join(''); return finish(); }
+
+  const skip = document.createElement('button'); skip.className='skip'; skip.type='button'; skip.textContent='Показати все одразу';
+  let i = 0, skipped = false;
+  skip.onclick = () => { skipped = true; chat.innerHTML = msgs.map((m,j)=>bubble(m[0],m[1],j?msgs[j-1][0]:null)).join(''); skip.remove(); finish(); };
+  document.getElementById('after').appendChild(skip);
+  const step = () => {
+    if (token!==playToken || skipped) return;
+    if (i >= msgs.length){ skip.remove(); return finish(); }
+    const m = msgs[i];
+    const prev = i ? msgs[i-1][0] : null;
+    const t = typingRow(m[0], prev);
+    const delay = m[0]==='sys' ? 450 : m[0]==='doc' ? 650 : m[0]==='me' ? 550 : Math.min(1600, 450 + m[1].length*11);
+    if (t) chat.insertAdjacentHTML('beforeend', t);
+    setTimeout(() => {
+      if (token!==playToken || skipped) return;
+      const ty = chat.querySelector('.typing'); if (ty) ty.remove();
+      chat.insertAdjacentHTML('beforeend', bubble(m[0], m[1], prev));
+      const last = chat.lastElementChild;
+      if (last && last.getBoundingClientRect().bottom > window.innerHeight - 90) last.scrollIntoView({behavior:'smooth', block:'end'});
+      i++; setTimeout(step, 220);
+    }, delay);
+  };
+  step();
+}
+
+function hubHead(){
+  return `<div class="timebar" aria-label="Залишилося годин: ${S.time}">${Array.from({length:6},(_,i)=>`<i class="${i < S.time ? '' : 'used'}"></i>`).join('')}<span>${S.time>0?`залишилося ${S.time} год`:`час вийшов`}</span></div>
+  <h2>${S.time>0 ? 'Що робимо?' : 'Пора писати'}</h2>`;
+}
+
+function showChoices(sc){
+  const ch = (sc.choices||[]).filter(c => !(c.cond && !c.cond(S)) && !(c.once && S.done.includes(c.once)));
+  const box = document.createElement('div'); box.className='choices';
+  ch.forEach(c => {
+    if (c.cost && c.cost > S.time) return;
+    const b = document.createElement('button'); b.type='button'; b.className = 'choice' + (c.primary?' primary':'');
+    b.innerHTML = c.text + (c.cost?`<span class="cost">${c.cost} год</span>`:'');
+    b.onclick = () => { if (c.cost) S.time -= c.cost; if (c.once) S.done.push(c.once); if (c.effect) c.effect(S); go(c.to); };
+    box.appendChild(b);
+  });
+  document.getElementById('after').appendChild(box);
+}
+
+function renderMarkup(sc){
+  const m = sc.markup;
+  const after = document.getElementById('after');
+  if (S.flags.markHit !== undefined){
+    after.innerHTML = `<div class="feedback ${S.flags.markHit>=3 && !S.flags.markMiss?'ok':'no'}">Ви влучили в ${S.flags.markHit} з 4 слабких місць${S.flags.markMiss?` і позначили ${S.flags.markMiss} зайвих`:''}. ${S.flags.markHit>=3 && !S.flags.markMiss ? 'Добрий розбір.' : 'Варто показати заявку експертові.'}</div>`;
+    S.seen[S.scene] = true; save();
+    const b = document.createElement('div'); b.className='choices'; b.innerHTML = `<button type="button" class="choice primary">Повернутися до плану</button>`;
+    b.firstChild.onclick = () => go(sc.next); after.appendChild(b); return;
+  }
+  const sel = new Set();
+  after.innerHTML = `<h2>Розбір заявки</h2><p>${m.intro(S)}</p><div class="choices" id="mk">${m.lines.map((l,i)=>`<button type="button" class="choice mark" aria-pressed="false" data-i="${i}">${l.t}</button>`).join('')}</div>
+  <div class="choices"><button type="button" class="choice primary" id="mkDone">Готово</button></div>`;
+  after.querySelectorAll('#mk button').forEach(b => b.onclick = () => { const i=+b.dataset.i; sel.has(i)?sel.delete(i):sel.add(i); b.setAttribute('aria-pressed', sel.has(i)); });
+  document.getElementById('mkDone').onclick = () => {
+    let hit=0, miss=0; m.lines.forEach((l,i)=>{ if(sel.has(i)){ l.bad?hit++:miss++; } });
+    S.flags.markHit=hit; S.flags.markMiss=miss;
+    S.acc += (hit>=3 && !miss ? 1 : 0) - (miss>0 ? 1 : 0);
+    addNote(S,'c3_found'); save(); render();
+  };
+}
+
+/* Блокнот */
+const drawer = document.getElementById('drawer');
+document.getElementById('notesBtn').addEventListener('click', () => {
+  document.getElementById('notesList').innerHTML = S.notes.length
+    ? `<ul>${S.notes.slice().reverse().map(k=>`<li>${NOTES[k]}</li>`).join('')}</ul>` : `<p>Поки порожньо.</p>`;
+  drawer.classList.add('open'); document.getElementById('closeNotes').focus();
+});
+document.getElementById('closeNotes').addEventListener('click', () => drawer.classList.remove('open'));
+drawer.addEventListener('click', e => { if (e.target === drawer) drawer.classList.remove('open'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') drawer.classList.remove('open'); });
+document.getElementById('restartBtn').addEventListener('click', () => go('restart'));
+
+render();
+</script>
+</body>
+</html>
